@@ -1,10 +1,10 @@
 <?php
 $projectRoot = __DIR__ . '/..';
-require_once($projectRoot . '/class/Question.php');
-require_once($projectRoot . '/class/QuizResult.php');
-require_once($projectRoot . '/class/Tag.php');
-require_once($projectRoot . '/class/User.php');
-require_once($projectRoot . '/class/Question.php');
+require_once($projectRoot . '/entity/Question.php');
+require_once($projectRoot . '/entity/QuizResult.php');
+require_once($projectRoot . '/entity/Tag.php');
+require_once($projectRoot . '/entity/User.php');
+require_once($projectRoot . '/entity/Question.php');
 
 class Common
 {
