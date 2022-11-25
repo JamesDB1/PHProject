@@ -1,6 +1,6 @@
 <?php
 
-class menuitem implements JsonSerializable
+class User implements JsonSerializable
 {
     private $username;
     private $password;

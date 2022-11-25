@@ -1,8 +1,11 @@
-#URL mapping for REST API Demo
+#URL mapping for Quiz App Demo
 #Note: "NC" means case insensitive
 RewriteEngine on
 
-RewriteRule ^menuService/items$ api/menuItemService.php [NC]
-RewriteRule ^menuService/items/([0-9]+)$ api/menuItemService.php?itemid=$1 [NC]
-RewriteRule ^menuService/categories$ api/menuCategoryService.php [NC]
-RewriteRule ^menuService/categories/(\w{3})$ api/menuCategoryService.php?categoryid=$1 [NC]
+RewriteRule ^quizapp/users$ api/userService.php [NC]
+RewriteRule ^quizapp/quizResults$ api/quizResultService.php [NC]
+RewriteRule ^quizapp/quizResults/user/(\w+)$ api/quizResultService.php?username=$1 [NC]
+RewriteRule ^quizapp/quizzes$ api/quizService.php [NC]
+RewriteRule ^quizapp/quizzes/(\w+)$ api/quizService.php?quizID=$1 [NC]
+
+RewriteRule ^login$ api/verifyUser.php [NC]

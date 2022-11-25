@@ -1,6 +1,6 @@
 <?php
 
-class menuitem implements JsonSerializable
+class QuizResult implements JsonSerializable
 {
     private $resultID;
     private $quiz;

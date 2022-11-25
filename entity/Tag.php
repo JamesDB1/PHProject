@@ -1,6 +1,6 @@
 <?php
 
-class menuitem implements JsonSerializable
+class Tag implements JsonSerializable
 {
     private $tagID;
     private $tagName;
