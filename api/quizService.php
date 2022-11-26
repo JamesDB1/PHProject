@@ -22,7 +22,7 @@ function doGet() {
     if (isset($_GET["quizID"])) {
         
         try {
-            $qra = new QuizResultAccessor();
+            $qra = new QuizAccessor();
             $results = $qra->getResultsByQuery("select * from Quiz where quizID = '" . $_GET['quizID'] . "'");
             $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
             echo $resultsJson;
@@ -30,6 +30,13 @@ function doGet() {
             echo "ERROR " . $e->getMessage();
         }
     } else {
-
+        try {
+            $qra = new QuizAccessor();
+            $results = $qra->getAllQuizzes();
+            $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
+            echo $resultsJson;
+        } catch (Exception $e) {
+            echo "ERROR " . $e->getMessage();
+        }
     }
 }
