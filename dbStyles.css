@@ -1,3 +1,17 @@
+body{
+    background: lightblue;
+}
+
+.containerMain{
+    background: white;
+    padding: 3em;
+    margin: 2em;
+}
+
+table {
+    width: 100%
+}
+
 table, td, th {
     border: solid thin gray;
     border-collapse: collapse;
