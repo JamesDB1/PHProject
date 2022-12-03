@@ -61,4 +61,29 @@ class UserAccessor {
         return $result;
     }
 
+    public function getAccountForUser($username)
+    {
+        $result = null;
+        $stmt = null;
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("select * from QuizAppUser where username = :username");
+            $stmt->bindParam(":username", $username);
+            $stmt->execute();
+            $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if(count($dbresults)===1) {
+                $result=new User($dbresults[0]["username"], $dbresults[0]["password"], $dbresults[0]["permissionLevel"]);
+            }
+            
+        } catch (Exception $e) {
+            $result = null;
+        } finally {
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
+            }
+        }
+
+        return $result;
+    }
+
 }
