@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/../db/QuizAccessor.php');
-
+require_once(__DIR__ . '/../utils/ChromePhp.php');
 /*
  * Important Note:
  * 
@@ -20,14 +20,14 @@ if ($method === "GET") {
 
 function doGet() {
     if (isset($_GET["quizID"])) {
-        
+
         try {
             $qra = new QuizAccessor();
             $results = $qra->getResultsByQuery("select * from Quiz where quizID = '" . $_GET['quizID'] . "'");
             $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
             echo $resultsJson;
         } catch (Exception $e) {
-            echo "ERROR " . $e->getMessage();
+            sendErrorJson($e->getMessage());
         }
     } else {
         try {
@@ -36,7 +36,13 @@ function doGet() {
             $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
             echo $resultsJson;
         } catch (Exception $e) {
-            echo "ERROR " . $e->getMessage();
+            sendErrorJson($e->getMessage());
         }
     }
+}
+
+function sendErrorJson($errMsg) {
+    ChromePhp::log($errMsg);
+    $err = array("ERROR" => $errMsg);
+    echo json_encode($err);
 }

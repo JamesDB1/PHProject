@@ -3,6 +3,7 @@
 require_once('dbconnect.php');
 require_once('QuestionAccessor.php');
 require_once(__DIR__ . '/../entity/Quiz.php');
+require_once(__DIR__ . '/../utils/ChromePhp.php');
 
 class QuizAccessor {
 
