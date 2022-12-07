@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App Enhanced Edition</title>
-    <script src="takeQuiz.js"></script>
+    <script src="scripts/takeQuiz.js"></script>
     <link rel="stylesheet" href="JL_styles.css">
 </head>
 

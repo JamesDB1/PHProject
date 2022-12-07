@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>Quiz Search</title>
         <link rel="stylesheet" href="dbStyles.css">
-        <script src="quiz.js"></script>
+        <script src="scripts/quiz.js"></script>
     </head>
     <body>
         <h1>PHP Quiz App</h1>
