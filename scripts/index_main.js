@@ -23,6 +23,8 @@ function doSearch() {
 function findMatchingQuizzes(jsonData, searchTerm) {
     let quizzes = JSON.parse(jsonData);
     let matchingQuizzes = [];
+    let resultsElement = document.querySelector("#matchingQuizzes");
+    resultsElement.innerHTML = "";
     for (let i = 0; i < quizzes.length; i++) {
         let quiz = quizzes[i];
         let questions = quiz.questions;
@@ -31,8 +33,9 @@ function findMatchingQuizzes(jsonData, searchTerm) {
             let tags = question.tags;
             for (let k = 0; k < tags.length; k++) {
                 let tag = tags[k];
-                if (tag.includes(searchTerm)) {
+                if (tag.tagName.toLowerCase().includes(searchTerm.toLowerCase())) {
                     matchingQuizzes.push(quiz);
+                    resultsElement.innerHTML += "<h2>" + tag.tagName + "</h2>";
                     break;
                 }
             }
@@ -47,8 +50,9 @@ function buildTable(quizzes) {
     for (let i = 0; i < quizzes.length; i++) {
         let quiz = quizzes[i];
         html += "<li>" + quiz.quizTitle + "</li>";
+        html += "<li>" + quiz.questions[0].tags[0].tagCategory  + "</li>";
     }
     html += "</ul>";
-    resultsElement.innerHTML = html;
+    resultsElement.innerHTML += html;
 }
 

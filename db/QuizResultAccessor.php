@@ -49,4 +49,7 @@ class QuizResultAccessor {
         return $this->getResultsByQuery("select * from QuizResult where username = '" . $username . "'");
     }
 
+    public function getResultsByScore($scoremin, $scoremax) {        
+        return $this->getResultsByQuery("select * from quizresult where (100*scoreNumerator/scoreDenominator) between " . $scoremin . " AND " . $scoremax);
+    }
 }

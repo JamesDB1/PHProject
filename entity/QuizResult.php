@@ -11,14 +11,14 @@ class QuizResult implements JsonSerializable
     private $scoreNumerator;
     private $scoreDenominator;
 
-    public function __construct($resultID, $quiz, $user, $answers, $startTime, $endTime, $scoreNumerator, $scoreDenominator)
+    public function __construct($resultID, $quiz, $user, $startTime, $endTime, $answers, $scoreNumerator, $scoreDenominator)
     {
         $this->resultID = $resultID;
         $this->quiz = $quiz;
         $this->user = $user;
-        $this->answers = $answers;
         $this->startTime = $startTime;
         $this->endTime = $endTime;
+        $this->answers = $answers;
         $this->scoreNumerator = $scoreNumerator;
         $this->scoreDenominator = $scoreDenominator;
     }

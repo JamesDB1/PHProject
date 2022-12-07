@@ -1,7 +1,18 @@
 window.onload = function () {
-    document.querySelector("#getResultsButton").addEventListener("click", getResultsByUser);
-    document.querySelector("#getScoreResultsButton").addEventListener("click", getResultsByScore);
-    loadUsers();
+    try {
+        let html = '<section id="userSearch" class="border border-secondary p-3 mb-3">';
+        html += '<h3>Search for Quiz Results by User</h3>';
+        html += '<form><select id="userInput"></select><button id="getResultsButton">Get Results</button></form>';
+        html += '<div class="quizResults"></div></section>';
+        html += '<section id="scoreSearch"class="border border-secondary p-3"><h3>Search for Quiz Results By Score</h3>';
+        html += '<form>Min: <input id="scoreMin" type="number" min="0" max="100"><br>Max: <input id="scoreMax" type="number" min="0" max="100">'
+        html += '<br><button id="getScoreResultsButton">Get Results</button></form><div class="quizResults"></div></section></div>';
+        document.body.innerHTML  += html;
+    } finally {
+        document.querySelector("#getResultsButton").addEventListener("click", getResultsByUser);
+        document.querySelector("#getScoreResultsButton").addEventListener("click", getResultsByScore);
+        loadUsers();
+    }
 };
 
 function getResultsByScore(e) {
@@ -35,11 +46,11 @@ function buildResultsSection(url, element, title) {
             for (let i = 0; i < data.length; i++) {
                 let temp = data[i];
                 html += "<tr>";
-                html += "<td>" + temp.username + "</td>";
+                html += "<td>" + temp.user + "</td>";
                 html += "<td>" + temp.quiz.quizID + "</td>";
                 html += "<td>" + temp.quiz.quizTitle + "</td>";
-                let startTime = temp.quizStartTime.split(" ");
-                let endTime = temp.quizEndTime.split(" ");
+                let startTime = temp.startTime.split(" ");
+                let endTime = temp.endTime.split(" ");
                 html += "<td>" + startTime[0] + " at " + startTime[1] + "</td>";
                 html += "<td>" + endTime[0] + " at " + endTime[1] + "</td>";
                 html += "<td>" + temp.scoreNumerator + "/" + temp.scoreDenominator + "</td>";
