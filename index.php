@@ -5,9 +5,16 @@
         <title>Home Page</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <script src="scripts/index_main.js"></script>
+        <link href="styles.css">
     </head>
     <body>
         <div class="container">
+            <div class="tempMenu">
+                <h2>Temporary Menu</h2>
+                <a href ="takeQuiz.php">Take a quiz</a><br>
+                <a href ="question.php">Search questions (ours)</a><br>
+                <a href="quizSearch.php">Search quizzes (ours)</a><br>
+            </div>
             <div class="row p-3 mb-3 bg-light border border-secondary">
                 <div class="col-9 col-xl-10 fs-2">Quiz App</div>
                 <div class="col-3 col-xl-2">

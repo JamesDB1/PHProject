@@ -1,7 +1,6 @@
 let quizData; //the quizData object from JSON will go here
 let user = ""; //userName entered by user will go here
 let correctAnswerText = []; //array to hold the correct answer text
-const topics = ["Geography", "Math", "Computer", "All"];
 
 window.onload = function () {
     document
@@ -9,7 +8,7 @@ window.onload = function () {
             .addEventListener("click", handleTabClick);
     document.querySelector("#btnSubmit").addEventListener("click", submitAnswers);
     document.querySelector("#btnStart").addEventListener("click", startQuiz);
-    fetchTopics();
+    fetchQuizzes();
 };
 
 /**
@@ -17,7 +16,7 @@ window.onload = function () {
  * Setup area
  */
 
-async function fetchTopics() {
+async function fetchQuizzes() {
     let url = "quizapp/quizzes"; // file name or server-side process name
     const response = await fetch(url);
     if (!response.ok) {
@@ -28,10 +27,12 @@ async function fetchTopics() {
         if (data.ERROR) {
             alert("Error fetching quizzes. \n\n" + data.ERROR);
         } else {
+            //Populate Select with quizzes
             let select = document.querySelector("#cmbTopic");
             let html = "";
             for (let quiz of data) {
-                html += `<option value="${quiz.quizId}">${quiz.quizTitle}</option>`;
+                console.log(quiz.quizID, quiz.quizTitle);
+                html += `<option value="${quiz.quizID}">${quiz.quizTitle}</option>`;
             }
             select.innerHTML = html;
         }
@@ -60,25 +61,28 @@ function startQuiz() {
 
 
 /**
- * Retrieves JSON data from a file on the web server
+ * Retrieves JSON data from a file from the database
  * and then calls buildQuiz using the response text
  * @param {type} quizId - The quiz that will be displayed
  */
-function getJSON(quizId) {
+async function getJSON(quizId) {
     console.log(quizId); //not used for the moment
     let url = `quizapp/quizzes/` + quizId; // file name or server-side process name
-    let xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-            if (xmlhttp.status === 200) {
-//        buildQuiz(xmlhttp.responseText); execute when server responds
-                console.log(JSON.parse(xmlhttp.responseText));
-            }
+    const response = await fetch(url);
+    if (!response.ok) {
+        alert("Error fetching quizzes. \n\n" + "Status code: " + response.status);
+    } else {
+        const data = await response.json();
+        //If there is an exception, the backend returns text with an ERROR field
+        if (data.ERROR) {
+            alert("Error fetching quizzes. \n\n" + data.ERROR);
+        } else {
+            //Parse the JSON data and build a quiz
+            //        buildQuiz(xmlhttp.responseText); execute when server responds
+//                console.log(data.quizTitle, data.questions);
+                buildQuiz(data);
         }
-    };
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send(); // HTTP get request
-
+    }
     //Reveal #theQuiz
     document.querySelector("#theQuiz").classList.remove("hidden");
 }
@@ -87,23 +91,23 @@ function getJSON(quizId) {
  * Accepts a JSON file from the AJAX call and outputs it to the
  * global quizData[] array; then constructs HTML that goes into the
  * quizArea div.
- * @param {JSON} text the raw JSON quiz data
+ * @param {Object} quizData the quiz object
  */
-function buildQuiz(text) {
+function buildQuiz(quizData) {
     let quizTitleArea = document.querySelector("#quizTitle");
     let quizArea = document.querySelector("#quizArea");
     let tabContainer = document.querySelector("#tabContainer");
+    
+    console.log(quizData);
 
     //reset elements of the quiz in case a new quiz is started
     tabContainer.innerHTML = "";
     quizArea.innerHTML = "";
     correctAnswerText = [];
 
-    quizData = JSON.parse(text);
+    quizTitleArea.innerHTML = `<h1>${quizData.quizTitle}</h1>`; //add Title
 
-    quizTitleArea.innerHTML = `<h1>${quizData.title}</h1>`; //add Title
-
-    addDevButton(quizTitleArea); //add random answer devButton to title area
+//    addDevButton(quizTitleArea); //add random answer devButton to title area
 
     let tabHTML = "";
     for (let i = 0; i < quizData.questions.length; i++) {
@@ -113,6 +117,7 @@ function buildQuiz(text) {
 
     for (let i = 0; i < quizData.questions.length; i++) {
         let q = quizData.questions[i];
+        console.log(q.choices);
 
         questionHTML = `<div id = "Question${i + 1}" class = tabContent>`; //open tabContent div
         questionHTML += `<div class = questionNumber>Question ${i + 1}</div>`;
@@ -143,9 +148,9 @@ function buildChoices(qChoices, qNumber) {
                 `${qChoices[j]} <br/>`;
     }
     //record the correct answer for this question in a global array
-    let answerIndex = quizData.questions[qNumber].answer;
-    let answerText = qChoices[answerIndex];
-    correctAnswerText.push(answerText);
+//    let answerIndex = quizData.questions[qNumber].answer;
+//    let answerText = qChoices[answerIndex];
+//    correctAnswerText.push(answerText);
     return choicesHTML;
 }
 

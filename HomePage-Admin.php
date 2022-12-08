@@ -19,7 +19,7 @@
             echo '<script src="scripts/homePage-Admin.js"></script>';
         }
         ?>
-        <link rel="stylesheet" href="JL_styles.css">
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <div class="container">
