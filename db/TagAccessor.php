@@ -19,7 +19,7 @@ class TagAccessor {
             $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($dbresults as $r) {
-                $obj = new Tag($r["tagID"], $r["tagName"], $r["tagCategoryName"]);
+                $obj = new Tag($r["tagID"], $r["tagName"], $r["1tagCategoryName"]);
                 array_push($results, $obj);
             }
         } catch (Exception $e) {

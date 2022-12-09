@@ -25,6 +25,37 @@ class QuizAccessor {
             $quizTitle = $dbquiz["quizTitle"];
             $questions = $questionAcc->getQuestionsForQuiz($quizID);
             $points = $this->getPointsForQuiz($quizID);
+            $questions = $questionAcc->getQuestionsForQuiz($quizID);
+            $points = $this->getPointsForQuiz($quizID);
+            $result = new Quiz($quizID, $quizTitle, $questions, $points);
+        } catch (Exception $e) {
+            $result = null;
+        } finally {
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
+            }
+        }
+
+        return $result;
+    }
+    
+    public function getQuizByIDEmpty($quizID) {
+        $result = null;
+        $stmt = null;
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("select * from Quiz where quizID = :quizID");
+            $stmt->bindParam(":quizID", $quizID);
+            $stmt->execute();
+            $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($dbresults) !== 1) {
+                throw new Exception("duplicate quizIDs found in Quiz table!");
+            }
+
+            $dbquiz = $dbresults[0];
+            $quizTitle = $dbquiz["quizTitle"];
+            $questions = null;
+            $points = null;
             $result = new Quiz($quizID, $quizTitle, $questions, $points);
         } catch (Exception $e) {
             $result = null;
