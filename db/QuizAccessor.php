@@ -56,7 +56,7 @@ class QuizAccessor {
                 $obj = new Quiz($quizID, $quizTitle, $questions, $points);
                 array_push($results, $obj);
             }
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
             $results = [];
         } finally {
             if (!is_null($stmt)) {
@@ -72,7 +72,7 @@ class QuizAccessor {
         $stmt = null;
         try {
             $conn = connect_db();
-            $stmt = $conn->prepare("select points from QuizQuestion where quizID = :quizID");
+            $stmt = $conn->prepare("SELECT points FROM QuizQuestion WHERE quizID = :quizID");
             $stmt->bindParam(":quizID", $quizID);
             $stmt->execute();
             $dbpoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -80,7 +80,7 @@ class QuizAccessor {
             foreach ($dbpoints as $p) {
                 array_push($points, intval($p));
             }
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
             $points = [];
         } finally {
             if (!is_null($stmt)) {
@@ -89,6 +89,27 @@ class QuizAccessor {
         }
 
         return $points;
+    }
+
+    /**
+     * Quicker method to get basic quiz info in order to populate menus.
+     * The purpose of this is to address performance issues with some parts 
+     * of the app.
+     */
+    public function getQuizInfo() {
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("SELECT quizID, quizTitle FROM Quiz");
+            $stmt->execute();
+            $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);            
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        } finally {
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
+            }
+            return $dbresults;
+        }
     }
 
 }
