@@ -25,8 +25,8 @@ class QuizAccessor {
             $quizTitle = $dbquiz["quizTitle"];
             $questions = $questionAcc->getQuestionsForQuiz($quizID);
             $points = $this->getPointsForQuiz($quizID);
-            $questions = null;
-            $points = null;
+            $questions = $questionAcc->getQuestionsForQuiz($quizID);
+            $points = $this->getPointsForQuiz($quizID);
             $result = new Quiz($quizID, $quizTitle, $questions, $points);
         } catch (Exception $e) {
             $result = null;
@@ -53,10 +53,7 @@ class QuizAccessor {
             }
 
             $dbquiz = $dbresults[0];
-            $questionAcc = new QuestionAccessor();
             $quizTitle = $dbquiz["quizTitle"];
-            //$questions = $questionAcc->getQuestionsForQuiz($quizID);
-            //$points = $this->getPointsForQuiz($quizID);
             $questions = null;
             $points = null;
             $result = new Quiz($quizID, $quizTitle, $questions, $points);

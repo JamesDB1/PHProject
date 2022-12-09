@@ -81,7 +81,7 @@ class QuizResultAccessor {
     }
 
     public function getResultsByUser($username) {
-        return $this->getResultsByQuery("select * from QuizResult where username = '" . $username . "'");
+        return $this->getResultsByQueryEmpty("select * from QuizResult where username = '" . $username . "'");
     }
 
     public function getResultsByScore($scoremin, $scoremax) {        
