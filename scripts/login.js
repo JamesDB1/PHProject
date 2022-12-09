@@ -31,7 +31,7 @@ function doLogin(e) {
                 alert("BAD RESPONSE from server - investigate! (Response: '" + resp + "')");
             }
         }
-    }
+    };
     xhr.open("POST", url, true);
     xhr.send(JSON.stringify(obj));
 }

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App Enhanced Edition</title>
     <script src="scripts/takeQuiz.js"></script>
-    <link rel="stylesheet" href="JL_styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -17,7 +17,7 @@
             <div class="gameInfo">
                 <div class="setupUsername">
                     <label for="txtUser">Please enter your name:</label>
-                    <input id="txtUser">
+                    <input id="txtUser" value="Admin1">
                 </div>
                 <div class="setupTopic">
                     <label for="cmbTopic">Please choose a topic for your Quiz:</label>
