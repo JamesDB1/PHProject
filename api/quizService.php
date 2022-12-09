@@ -28,13 +28,12 @@ function doGet() {
     if (isset($_GET["quizID"])) {
 
         try {
-//            ChromePhp::log("DOGET FOR quizID " . $_GET["quizID"]);
             $qa = new QuizAccessor();
 
             $results = $qa->getQuizByID($_GET['quizID']);
             $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
+
             echo $resultsJson;
-//            ChromePhp::log("RES FROM QuizAccessor SINGLE " . $resultsJson);
         } catch (Exception $e) {
             sendErrorJson($e->getMessage());
         }
@@ -44,7 +43,6 @@ function doGet() {
             $results = $qa->getQuizInfo();
             $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
             echo $resultsJson;
-            ChromePhp::log($resultsJson);
         } catch (Exception $ex) {
             sendErrorJson($ex->getMessage());
         }

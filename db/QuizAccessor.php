@@ -8,8 +8,7 @@ require_once(__DIR__ . '/../utils/ChromePhp.php');
 class QuizAccessor {
 
     public function getQuizByID($quizID) {
-        $result = null;
-        $stmt = null;
+
         try {
             $conn = connect_db();
             $stmt = $conn->prepare("select * from Quiz where quizID = :quizID");
@@ -25,8 +24,6 @@ class QuizAccessor {
             $quizTitle = $dbquiz["quizTitle"];
             $questions = $questionAcc->getQuestionsForQuiz($quizID);
             $points = $this->getPointsForQuiz($quizID);
-            $questions = $questionAcc->getQuestionsForQuiz($quizID);
-            $points = $this->getPointsForQuiz($quizID);
             $result = new Quiz($quizID, $quizTitle, $questions, $points);
         } catch (Exception $e) {
             $result = null;
@@ -34,9 +31,10 @@ class QuizAccessor {
             if (!is_null($stmt)) {
                 $stmt->closeCursor();
             }
+            return $result;
         }
 
-        return $result;
+        
     }
     
     public function getQuizByIDEmpty($quizID) {
@@ -107,10 +105,12 @@ class QuizAccessor {
             $stmt->bindParam(":quizID", $quizID);
             $stmt->execute();
             $dbpoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            ChromePhp::log($dbpoints);
             $points = [];
             foreach ($dbpoints as $p) {
-                array_push($points, intval($p));
+                array_push($points, intval($p["points"]));
             }
+            ChromePhp::log($points);
         } catch (Exception $ex) {
             $points = [];
         } finally {

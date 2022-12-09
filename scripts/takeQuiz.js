@@ -29,7 +29,7 @@ async function fetchAllQuizInfo() {
             let select = document.querySelector("#cmbTopic");
             let html = "";
             for (let quiz of data) {
-                console.log(quiz.quizID, quiz.quizTitle);
+//                console.log(quiz.quizID, quiz.quizTitle);
                 html += `<option value="${quiz.quizID}">${quiz.quizTitle}</option>`;
             }
             select.innerHTML = html;
@@ -187,26 +187,29 @@ function submitAnswers() {
     let userAnswers = document.querySelectorAll("input[type='radio']:checked");
     let userAnswersValues = [];
     let score = 0;
+    let totalPts = 0;
 
     console.log(quizData);
 
     //make sure the user has answered all questions
-    if (userAnswers.length !== quizData.points.length) {
+    if (userAnswers.length !== quizData.questions.length) {
         alert("You must answer all of the questions.");
         return;
     }
     
     //tally the correct answers
     for (let i = 0; i < userAnswers.length; i++) {
+        const questionVal = quizData.points[i];
+        totalPts += questionVal;
         userAnswersValues.push(userAnswers[i].value);
         if (Number(userAnswersValues[i]) === quizData.questions[i].answer) {
-            score += quizData.points[i];
+            score += questionVal;
         }
     }
     //show the user their score
     let answersHTML =
             `<div class = "yourScore">Your Score: ` +
-            `${score} / ${quizData.questions.length} </div>`;
+            `${score} / ${totalPts} </div>`;
 
     answersHTML += buildTable(userAnswersValues, quizData);
 
@@ -277,10 +280,10 @@ function createQuizRecord(userAnswers, score) {
         dateTime: datetime,
         userAnswers: userAnswers,
         score: score,
-        quiz: quizData,
+        quizID: quizData.quizID,
     };
 
-//    addRecordToCollection(quizRecord);
+//    postResult(quizRecord);
 }
 
 /**
@@ -288,10 +291,8 @@ function createQuizRecord(userAnswers, score) {
  * the server for storage in JSON format.
  * @param {Object} quizRecord quizRecord object 
  */
-function addRecordToCollection(quizRecord) {
-    let account = "londonj";
-    let collection = "sampleResults";
-    let url = `https://assignment0.com/jsonstore/webservice/${account}/collections/${collection}/records`;
+function postResult(quizRecord) {    
+    let url = `quizapp/quizResults`;
     let method = "POST";
     let jsonString = JSON.stringify(quizRecord);
     let payload = JSON.stringify({jsonString: jsonString});
