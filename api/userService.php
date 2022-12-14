@@ -18,6 +18,10 @@ if ($method === "GET") {
     doGet();
 } else if ($method === "POST") {
     doPost();
+} else if ($method === "DELETE") {
+    doDelete();
+} else if ($method === "PUT") {
+    doPut();
 }
 
 function doGet() {
@@ -35,20 +39,60 @@ function doPost() {
     $body = file_get_contents('php://input'); // body of HTTP request
     $contents = json_decode($body, true);
     ChromePhp::log("Inside Post Service");
-    
-    ChromePhp::log($contents);
 
     $username = $contents["username"];
     $password = $contents["password"];
     $permissionLevel = $contents["permissionLevel"];
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    
+
     try {
         $result = new User($username, $hash, $permissionLevel);
 
         $ua = new UserAccessor();
-        
+
         $success = $ua->insertAccount($result);
+        echo $success;
+    } catch (Exception $ex) {
+        sendErrorJson($ex->getMessage());
+    }
+}
+
+function doPut() {
+    $body = file_get_contents('php://input'); // body of HTTP request
+    $contents = json_decode($body, true);
+    ChromePhp::log("Inside Put Service");
+
+    $username = $contents["username"];
+    $password = $contents["password"];
+    $permissionLevel = $contents["permissionLevel"];
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+
+    try {
+        $result = new User($username, $hash, $permissionLevel);
+
+        $ua = new UserAccessor();
+
+        $success = $ua->updateAccount($result);
+        echo $success;
+    } catch (Exception $ex) {
+        sendErrorJson($ex->getMessage());
+    }
+}
+
+function doDelete() {
+    $body = file_get_contents('php://input'); // body of HTTP request
+    $contents = json_decode($body, true);
+    ChromePhp::log("Inside Delete Service");
+
+    $username = $contents["username"];
+
+
+    try {
+        $result = new User($username, "dummyHash", "dummyPermission");
+
+        $ua = new UserAccessor();
+
+        $success = $ua->deleteAccount($result);
         echo $success;
     } catch (Exception $ex) {
         sendErrorJson($ex->getMessage());
