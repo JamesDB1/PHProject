@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Part A - HTML/JS Validation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="main.js" defer></script>
+    </head>
+    <body>
+        <h1>Create a Question</h1>
+        <form id="form" action="received.php" method="POST">
+            Question ID <input name="questionid" type="text" pattern="QU-\d{3}" required><br>
+            Title  <input name="title" type="text" required><br>
+            Number of Choices 
+            <select id="nChoices" name="nChoices">
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+            </select><br>
+            <ol type="a" id="choices">
+                <li><input id="choice1" name="choice1" type="text" required></li>
+                <li><input id="choice2" name="choice2" type="text" required></li>
+                <li><input id="choice3" name="choice3" type="text" required></li>
+            </ol>
+            Answer:  <input id="answer" name="answer" type="text" required><span id="errorSpan"></span><br>
+            Points:  <input id="points" name="points" type="number" min="0" required><br>
+            
+            
+            <button type="submit">Done</button>
+        </form>
+        
+    </body>
+</html>

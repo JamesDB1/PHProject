@@ -33,7 +33,7 @@
                     } else {
                         session_start();
                         $_SESSION["currentUser"] = json_encode($account);
-                        header("location: HomePage-Router.php");
+                        header("location: quizzes.php");
                     }
                 }
             }

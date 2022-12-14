@@ -78,7 +78,7 @@ class QuestionAccessor
         $results = [];
         try {
             $conn = connect_db();
-            $stmt = $conn->prepare("select Question.questionID, Question.questionText, Question.choices, Question.answer from QuizQuestion, Question, Questiontag, Tag where QuizQuestion.questionID = Question.questionID AND questiontag.tagID = tag.tagID AND tag.tagName LIKE :tags");
+            $stmt = $conn->prepare("select distinct Question.* from Question, Questiontag, Tag where QuestionTag.questionID = Question.questionID AND questiontag.tagID = tag.tagID AND tag.tagName LIKE :tags");
             $stmt->bindParam(":tags", $tags);
             $stmt->execute();
             $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);

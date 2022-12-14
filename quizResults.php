@@ -28,5 +28,6 @@
             <div id="menu">
                 <p>Show <?php echo $permissionLevel ?> menu here.</p>
             </div>
+        </div>
     </body>
 </html>

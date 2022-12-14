@@ -33,10 +33,8 @@ class QuizAccessor {
             }
             return $result;
         }
-
-        
     }
-    
+
     public function getQuizByIDEmpty($quizID) {
         $result = null;
         $stmt = null;
@@ -105,12 +103,11 @@ class QuizAccessor {
             $stmt->bindParam(":quizID", $quizID);
             $stmt->execute();
             $dbpoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             $points = [];
             foreach ($dbpoints as $p) {
                 array_push($points, intval($p["points"]));
             }
-            
         } catch (Exception $ex) {
             $points = [];
         } finally {
@@ -132,7 +129,25 @@ class QuizAccessor {
             $conn = connect_db();
             $stmt = $conn->prepare("SELECT quizID, quizTitle FROM Quiz");
             $stmt->execute();
-            $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);            
+            $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        } finally {
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
+            }
+            return $dbresults;
+        }
+    }
+
+    public function getQuizzesByTags($tags) {
+        $tags = "%" . $tags . "%";
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("select distinct quiz.* from quiz, quizquestion, questiontag, tag where quizquestion.quizID = quiz.quizID AND quizquestion.questionID = questiontag.questionID AND questiontag.tagID = tag.tagID AND tag.tagName LIKE :tags");
+            $stmt->bindParam(":tags", $tags);
+            $stmt->execute();
+            $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $ex) {
             return $ex->getMessage();
         } finally {
