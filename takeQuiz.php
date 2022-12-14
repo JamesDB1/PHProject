@@ -46,6 +46,7 @@
             </div>
         </div>
         <div class="home_link">
+            <a href='takeQuiz.php'>Try Another Quiz</a>
             <a href="index.php">Home</a>
         </div>
     </div>

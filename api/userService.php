@@ -1,7 +1,8 @@
 <?php
 
+require_once(__DIR__ . '/../entity/User.php');
 require_once(__DIR__ . '/../db/UserAccessor.php');
-
+require_once(__DIR__ . '/../utils/ChromePhp.php');
 
 /*
  * Important Note:
@@ -15,8 +16,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === "GET") {
     doGet();
-} else {
-    // not supported yet
+} else if ($method === "POST") {
+    doPost();
 }
 
 function doGet() {
@@ -28,4 +29,34 @@ function doGet() {
     } catch (Exception $e) {
         echo "ERROR " . $e->getMessage();
     }
+}
+
+function doPost() {
+    $body = file_get_contents('php://input'); // body of HTTP request
+    $contents = json_decode($body, true);
+    ChromePhp::log("Inside Post Service");
+    
+    ChromePhp::log($contents);
+
+    $username = $contents["username"];
+    $password = $contents["password"];
+    $permissionLevel = $contents["permissionLevel"];
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+    
+    try {
+        $result = new User($username, $hash, $permissionLevel);
+
+        $ua = new UserAccessor();
+        
+        $success = $ua->insertAccount($result);
+        echo $success;
+    } catch (Exception $ex) {
+        sendErrorJson($ex->getMessage());
+    }
+}
+
+function sendErrorJson($errMsg) {
+    ChromePhp::log($errMsg);
+    $err = array("ERROR" => $errMsg);
+    echo json_encode($err);
 }

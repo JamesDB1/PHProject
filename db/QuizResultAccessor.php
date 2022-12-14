@@ -20,7 +20,6 @@ class QuizResultAccessor {
 
         $this->insertStatement = $this->conn->prepare($this->insertString);
         ChromePhp::log("....constructing... success.....");
-        ChromePhp::log($this->insertStatement);
         if (is_null($this->insertStatement)) {
             throw new Exception("bad statement: '" . $this->insertString . "'");
         }
