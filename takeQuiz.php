@@ -17,7 +17,7 @@
             <div class="gameInfo">
                 <div class="setupUsername">
                     <label for="txtUser">Please enter your name:</label>
-                    <input id="txtUser" value="Admin1">
+                    <input id="txtUser">
                 </div>
                 <div class="setupTopic">
                     <label for="cmbTopic">Please choose a topic for your Quiz:</label>

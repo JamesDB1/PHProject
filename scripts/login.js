@@ -16,7 +16,7 @@ function doLogin(e) {
         password: password
     };
 
-    let url = "login"
+    let url = "login";
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {

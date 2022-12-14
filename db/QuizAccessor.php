@@ -105,12 +105,12 @@ class QuizAccessor {
             $stmt->bindParam(":quizID", $quizID);
             $stmt->execute();
             $dbpoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            ChromePhp::log($dbpoints);
+            
             $points = [];
             foreach ($dbpoints as $p) {
                 array_push($points, intval($p["points"]));
             }
-            ChromePhp::log($points);
+            
         } catch (Exception $ex) {
             $points = [];
         } finally {

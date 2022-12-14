@@ -15,22 +15,22 @@ class Quiz implements JsonSerializable
         $this->points = $points;
     }
 
-    public function getquizID()
+    public function getQuizID()
     {
         return $this->quizID;
     }
 
-    public function getquizTitle()
+    public function getQuizTitle()
     {
         return $this->quizTitle;
     }
 
-    public function getquestions()
+    public function getQuestions()
     {
         return $this->questions;
     }
 
-    public function getpoints()
+    public function getPoints()
     {
         return $this->points;
     }

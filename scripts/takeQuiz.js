@@ -1,20 +1,55 @@
-let user = ""; //userName entered by user will go here
+/**
+ * These variables will store the start time obj (needed for quiz result),
+ * The user obj (needed for quiz result), and the quizData array, which is used
+ * throughout the application.
+ */
+let startTime;
+let user = "";
 let quizData = [];
+
 window.onload = function () {
     document
             .querySelector("#tabContainer")
             .addEventListener("click", handleTabClick);
     document.querySelector("#btnStart").addEventListener("click", startQuiz);
-    document.querySelector("#btnSubmit").addEventListener("click", submitAnswers);
+    document.querySelector("#btnSubmit").addEventListener("click", submitAnswers);    
     fetchAllQuizInfo();
+
 };
 
+/**
+ * Called when page is loaded to fetch the correct user (using textbox for now)
+ */
+
+async function fetchUser() {
+    let url = "quizapp/users"; // file name or server-side process name
+    const response = await fetch(url);
+    if (!response.ok) {
+        alert("Error fetching users. \n\n" + "Status code: " + response.status);
+    } else {
+        const data = await response.json();
+        //If there is an exception, the backend returns text with an ERROR field
+        if (data.ERROR) {
+            alert("Error fetching users. \n\n" + data.ERROR);
+        } else {
+            //Match our user to results
+            let txtUser = document.querySelector("#txtUser").value;
+            for (let u of data) {
+                if (u.username.toLowerCase() === txtUser.toLowerCase()) {
+                    user = u;
+                    break;
+                } 
+            }
+        }
+    }
+}
 /**
  * Called when page is loaded to add quiz topics to the menu in the
  * Setup area
  */
 
 async function fetchAllQuizInfo() {
+
     let url = "quizapp/quizzes/quizInfo"; // file name or server-side process name
     const response = await fetch(url);
     if (!response.ok) {
@@ -40,8 +75,9 @@ async function fetchAllQuizInfo() {
 /**
  * Called when Start Quiz button is clicked
  */
-function startQuiz() {
-    user = document.querySelector("#txtUser").value;
+async function startQuiz() {    
+    startTime = new Date();
+    await fetchUser();
     if (!user) {
         alert("You must enter your name before you can begin.");
         return;
@@ -63,8 +99,7 @@ function startQuiz() {
  * and then calls buildQuiz using the response text
  * @param {type} quizId - The quiz that will be displayed
  */
-async function getJSON(quizId) {
-    console.log(quizId); //not used for the moment
+async function getJSON(quizId) {     
     let url = `quizapp/quizzes/` + quizId;
     const response = await fetch(url);
     if (!response.ok) {
@@ -74,7 +109,7 @@ async function getJSON(quizId) {
         //If there is an exception, the backend returns text with an ERROR field
         if (data.ERROR) {
             alert("Error fetching quizzes. \n\n" + data.ERROR);
-        } else {                     
+        } else {
             //Build quiz HTML
             buildQuiz(data);
         }
@@ -87,7 +122,7 @@ async function getJSON(quizId) {
 /**
  * Accepts a quiz object from the Fetch call and 
  * then constructs HTML that goes into the quizArea div.
- * @param {Object} quizData the quiz object
+ * @param {Object} data the quiz object from Json/Fetch
  */
 function buildQuiz(data) {
     let quizArea = document.querySelector("#quizArea");
@@ -96,9 +131,9 @@ function buildQuiz(data) {
     //reset elements of the quiz in case a new quiz is started
     tabContainer.innerHTML = "";
     quizArea.innerHTML = "";
-    
+
     quizData = data;
-    
+
     document.querySelector("#quizTitle").innerHTML = `<h1>${quizData.quizTitle}</h1>`; //add Title
 
     addDevButton(quizData); //add random answer devButton to title area
@@ -111,8 +146,7 @@ function buildQuiz(data) {
 
     for (let i = 0; i < quizData.questions.length; i++) {
         let q = quizData.questions[i];
-        console.log(q.choices);
-
+        
         questionHTML = `<div id = "Question${i + 1}" class = tabContent>`; //open tabContent div
         questionHTML += `<div class = questionNumber>Question ${i + 1}</div>`;
         questionHTML += `<div class = questionBody>`; //open questionBody div
@@ -189,14 +223,12 @@ function submitAnswers() {
     let score = 0;
     let totalPts = 0;
 
-    console.log(quizData);
-
     //make sure the user has answered all questions
     if (userAnswers.length !== quizData.questions.length) {
         alert("You must answer all of the questions.");
         return;
     }
-    
+
     //tally the correct answers
     for (let i = 0; i < userAnswers.length; i++) {
         const questionVal = quizData.points[i];
@@ -215,7 +247,7 @@ function submitAnswers() {
 
     document.querySelector("#answersArea").innerHTML = answersHTML;
 
-    createQuizRecord(userAnswersValues, score);
+    createQuizResult(userAnswersValues, score);
 }
 
 /**
@@ -240,12 +272,11 @@ function buildTable(userAnswers) {
     for (let q of quizData.questions) {
         correctAnswers.push(q.answer);
     }
-    console.log(correctAnswers);
-
+    
     for (let i = 0; i < userAnswers.length; i++) {
         const choicesText = quizData.questions[i].choices;
         const userAnsIndex = Number(userAnswers[i]);
-        
+
         //check to see if the answer is right -- if so, row score is 1
         //and no class is added; if not, score is 0 and class is 'incorrect'
         let questionScore = 0;
@@ -268,46 +299,58 @@ function buildTable(userAnswers) {
 }
 
 /**
- * Called by submitAnswers to create a record Object when the user
+ * Called by submitAnswers to create a result Object when the user
  * submits their answers.
  * @param {Array} userAnswers Array of indexes
  * @param {Number} score The total number user got correct
  */
-function createQuizRecord(userAnswers, score) {
-    let datetime = new Date().toISOString();
-    let quizRecord = {
+function createQuizResult(userAnswers, score) {
+    let endTime = new Date();
+
+    let denom = 0;
+    for (let p of quizData.points) {
+        denom += p;
+    }
+
+    let quizResult = {
+        resultID: "NEW",
         user: user,
-        dateTime: datetime,
-        userAnswers: userAnswers,
-        score: score,
-        quizID: quizData.quizID,
+        startTime: startTime,
+        endTime: endTime,
+        answers: userAnswers,
+        scoreNumerator: score,
+        scoreDenominator: denom,
+        quiz: quizData,
     };
 
-//    postResult(quizRecord);
+    console.log("QR OBJ: " + quizResult);
+    postResult(quizResult);
 }
 
 /**
- * Called by createQuizRecord to send the quiz record object to
+ * Called by createQuizResult to send the quiz result object to
  * the server for storage in JSON format.
- * @param {Object} quizRecord quizRecord object 
+ * @param {Object} quizResult quizResult object 
  */
-function postResult(quizRecord) {    
-    let url = `quizapp/quizResults`;
-    let method = "POST";
-    let jsonString = JSON.stringify(quizRecord);
-    let payload = JSON.stringify({jsonString: jsonString});
-
-    let xhr = new XMLHttpRequest();
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            console.log(xhr.responseText);
-        }
-    };
-
-    xhr.open(method, url, true);
-    xhr.send(payload);
-}
+async function postResult(quizResult) {
+    console.log("USER" + user);
+    let url = `quizapp/quizResults/user/` + user.username;
+    const resp = await fetch(url, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(quizResult),
+    });
+    
+    const msg = await resp.json();
+    
+    if (msg === 1){
+        alert("QuizResult POST to database succeeded.");
+    } else if (msg === 0){
+        alert("QuizResult POST to database FAILED.");
+    } else {
+        //If there is an exception, the backend returns a JSON object with an ERROR field
+        alert("Server-side error. \n\n" + ERROR.msg);
+}}
 
 /**
  * @_______TAB_MANAGEMENT_FUNCTIONS_______
