@@ -12,11 +12,11 @@ $permissionLevel = $userInfo["permissionLevel"];
 
         <?php
         if (($permissionLevel === "USER")) {
-            echo '<script src="scripts/quizSearch.js"></script>';
+            echo '<script src="scripts/quizResultSearch.js"></script>';
         } else if (($permissionLevel === "ADMIN")) {
-            echo '<script src="scripts/quizSearch.js"></script>';
+            echo '<script src="scripts/quizResultSearch.js"></script>';
         } else if (($permissionLevel === "SUPER")) {
-            echo '<script src="scripts/quizSearch.js"></script>';
+            echo '<script src="scripts/quizResultSearch.js"></script>';
         }
         ?>
         <link rel="stylesheet" href="styles.css">

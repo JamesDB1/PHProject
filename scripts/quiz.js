@@ -254,13 +254,12 @@ function buildTable(text) {
     let data = JSON.parse(text);
     let theTable = document.querySelector("#tableSearch");
     let html = theTable.querySelector("tr").innerHTML;
-    html = "<tr><th>Quiz ID</th><th>Quiz Name</th><th>Action</th></tr>"
+    html = "<tr><th>Quiz ID</th><th>Quiz Name</th></tr>"
     for (let i = 0; i < data.length; i++) {
         let temp = data[i];
         html += "<tr>";
         html += "<td>" + temp.quizID + "</td>";
         html += "<td>" + temp.quizTitle + "</td>";
-        html += "<td><a href=quizapp/quizzes/" + temp.quizID + ">Take Quiz</a></td>";
         html += "</tr>";
     }
     theTable.innerHTML = html;
