@@ -14,7 +14,7 @@
         if(($permissionLevel === "USER")){
             echo '<script src="scripts/homePage-Admin.js"></script>';
         } else if(($permissionLevel === "ADMIN")){
-            echo '<script src="scripts/quizResultSearch.js"></script>';
+            echo '<script src="scripts/questionSearch.js"></script>';
         } else if(($permissionLevel === "SUPER")){
             echo '<script src="scripts/homePage-Admin.js"></script>';
         }
