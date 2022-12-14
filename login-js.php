@@ -23,6 +23,8 @@
                 </div>
                 <button id="loginButton" class="btn btn-primary" type="submit">Login</button>
             </form>
+            <h3>Don't have an account? No problem.</h3>
+            <a href='create_new_user.php'>Create a User Account</a>
         </div>
     </body>
 </html>
