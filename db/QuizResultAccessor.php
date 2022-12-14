@@ -7,6 +7,7 @@ require_once(__DIR__ . '/../entity/QuizResult.php');
 class QuizResultAccessor {
 
     public function getResultsByQuery($query) {
+        
         $results = [];
         $stmt = null;
         $dbresults = null;
@@ -57,6 +58,8 @@ class QuizResultAccessor {
                 $stmt->closeCursor();
             }
         }
+        
+        ChromePhp::log($query);
 
         $quizAcc = new QuizAccessor();
 
@@ -79,6 +82,10 @@ class QuizResultAccessor {
     public function getAllResults() {
         return $this->getResultsByQuery("select * from QuizResult");
     }
+    
+    public function getAllResultsEmpty(){
+        return $this->getResultsByQueryEmpty("select * from QuizResult");
+    }
 
     public function getResultsByUser($username) {
         return $this->getResultsByQueryEmpty("select * from QuizResult where username = '" . $username . "'");
@@ -86,5 +93,13 @@ class QuizResultAccessor {
 
     public function getResultsByScore($scoremin, $scoremax) {        
         return $this->getResultsByQueryEmpty("select * from quizresult where (100*scoreNumerator/scoreDenominator) between " . $scoremin . " AND " . $scoremax);
+    }
+    
+    public function getResultsByDate($datestart, $dateend) {        
+        return $this->getResultsByQueryEmpty("select * from quizresult where quizStartTime between timestamp('" . $datestart . "') AND timestamp('" . $dateend . "')");
+    }
+    
+    public function getResultsByTags($tags) {        
+        return $this->getResultsByQueryEmpty("select quizresult.* from quizresult, quizquestion, questiontag, tag where quizquestion.quizID = quizresult.quizID AND quizquestion.questionID = questiontag.questionID AND questiontag.tagID = tag.tagID AND tag.tagName LIKE '%" . $tags . "%'");
     }
 }

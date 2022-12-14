@@ -23,9 +23,10 @@ function doSearch() {
 function findMatchingQuizzes(jsonData, searchTerm) {
     let quizzes = JSON.parse(jsonData);
     let matchingQuizzes = [];
-    let resultsElement = document.querySelector("#matchingQuizzes");
+    let resultsElement = document.querySelector("#quizzes");
     resultsElement.innerHTML = "";
     for (let i = 0; i < quizzes.length; i++) {
+        let getOut = false;
         let quiz = quizzes[i];
         let questions = quiz.questions;
         for (let j = 0; j < questions.length; j++) {
@@ -35,9 +36,13 @@ function findMatchingQuizzes(jsonData, searchTerm) {
                 let tag = tags[k];
                 if (tag.tagName.toLowerCase().includes(searchTerm.toLowerCase())) {
                     matchingQuizzes.push(quiz);
-                    resultsElement.innerHTML += "<h2>" + tag.tagName + "</h2>";
+                    getOut = true;
                     break;
                 }
+            }
+            if (getOut !== false) {
+                getOut = false;
+                break;
             }
         }
     }
@@ -45,14 +50,17 @@ function findMatchingQuizzes(jsonData, searchTerm) {
 }
 
 function buildTable(quizzes) {
-    let resultsElement = document.querySelector("#matchingQuizzes");
-    let html = "<ul>";
+    let resultsElement = document.querySelector("#quizzes");
+    html = "<table>";
+    html += "<tr><th>Quiz ID</th><th>Quiz Title</th></tr>";
     for (let i = 0; i < quizzes.length; i++) {
         let quiz = quizzes[i];
-        html += "<li>" + quiz.quizTitle + "</li>";
-        html += "<li>" + quiz.questions[0].tags[0].tagCategory  + "</li>";
+        html += "<tr>";
+        html += "<td>" + quiz.quizID + "</td>";
+        html += "<td>" + quiz.quizTitle + "</td>";
+        html += "</tr>";
     }
-    html += "</ul>";
+    html += "</table>";
     resultsElement.innerHTML += html;
 }
 
