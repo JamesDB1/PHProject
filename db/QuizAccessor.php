@@ -8,8 +8,7 @@ require_once(__DIR__ . '/../utils/ChromePhp.php');
 class QuizAccessor {
 
     public function getQuizByID($quizID) {
-        $result = null;
-        $stmt = null;
+
         try {
             $conn = connect_db();
             $stmt = $conn->prepare("select * from Quiz where quizID = :quizID");
@@ -25,8 +24,6 @@ class QuizAccessor {
             $quizTitle = $dbquiz["quizTitle"];
             $questions = $questionAcc->getQuestionsForQuiz($quizID);
             $points = $this->getPointsForQuiz($quizID);
-            $questions = $questionAcc->getQuestionsForQuiz($quizID);
-            $points = $this->getPointsForQuiz($quizID);
             $result = new Quiz($quizID, $quizTitle, $questions, $points);
         } catch (Exception $e) {
             $result = null;
@@ -34,9 +31,10 @@ class QuizAccessor {
             if (!is_null($stmt)) {
                 $stmt->closeCursor();
             }
+            return $result;
         }
 
-        return $result;
+        
     }
     
     public function getQuizByIDEmpty($quizID) {
@@ -87,7 +85,7 @@ class QuizAccessor {
                 $obj = new Quiz($quizID, $quizTitle, $questions, $points);
                 array_push($results, $obj);
             }
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
             $results = [];
         } finally {
             if (!is_null($stmt)) {
@@ -103,15 +101,17 @@ class QuizAccessor {
         $stmt = null;
         try {
             $conn = connect_db();
-            $stmt = $conn->prepare("select points from QuizQuestion where quizID = :quizID");
+            $stmt = $conn->prepare("SELECT points FROM QuizQuestion WHERE quizID = :quizID");
             $stmt->bindParam(":quizID", $quizID);
             $stmt->execute();
             $dbpoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            ChromePhp::log($dbpoints);
             $points = [];
             foreach ($dbpoints as $p) {
-                array_push($points, intval($p));
+                array_push($points, intval($p["points"]));
             }
-        } catch (Exception $e) {
+            ChromePhp::log($points);
+        } catch (Exception $ex) {
             $points = [];
         } finally {
             if (!is_null($stmt)) {
@@ -120,6 +120,27 @@ class QuizAccessor {
         }
 
         return $points;
+    }
+
+    /**
+     * Quicker method to get basic quiz info in order to populate menus.
+     * The purpose of this is to address performance issues with some parts 
+     * of the app.
+     */
+    public function getQuizInfo() {
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("SELECT quizID, quizTitle FROM Quiz");
+            $stmt->execute();
+            $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);            
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        } finally {
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
+            }
+            return $dbresults;
+        }
     }
 
 }

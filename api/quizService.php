@@ -18,19 +18,33 @@ if ($method === "GET") {
     // not supported yet
 }
 
+/**
+ * Returns the following:
+ * 1. If quizID is set: All data for a single matching quiz.
+ * 2. If quizInfo is set: quizID, quizTitle for all quizzes.
+ * 3. Otherwise: All data for all quizzes (SLOW).
+ */
 function doGet() {
     if (isset($_GET["quizID"])) {
 
         try {
-//            ChromePhp::log("DOGET FOR quizID " . $_GET["quizID"]);
             $qa = new QuizAccessor();
 
             $results = $qa->getQuizByID($_GET['quizID']);
             $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
+
             echo $resultsJson;
-//            ChromePhp::log("RES FROM QuizAccessor SINGLE " . $resultsJson);
         } catch (Exception $e) {
             sendErrorJson($e->getMessage());
+        }
+    } else if (isset($_GET["quizInfo"])) {
+        try {
+            $qa = new QuizAccessor();
+            $results = $qa->getQuizInfo();
+            $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
+            echo $resultsJson;
+        } catch (Exception $ex) {
+            sendErrorJson($ex->getMessage());
         }
     } else {
         try {

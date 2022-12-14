@@ -1,14 +1,12 @@
-let quizData; //the quizData object from JSON will go here
 let user = ""; //userName entered by user will go here
-let correctAnswerText = []; //array to hold the correct answer text
-
+let quizData = [];
 window.onload = function () {
     document
             .querySelector("#tabContainer")
             .addEventListener("click", handleTabClick);
-    document.querySelector("#btnSubmit").addEventListener("click", submitAnswers);
     document.querySelector("#btnStart").addEventListener("click", startQuiz);
-    fetchQuizzes();
+    document.querySelector("#btnSubmit").addEventListener("click", submitAnswers);
+    fetchAllQuizInfo();
 };
 
 /**
@@ -16,8 +14,8 @@ window.onload = function () {
  * Setup area
  */
 
-async function fetchQuizzes() {
-    let url = "quizapp/quizzes"; // file name or server-side process name
+async function fetchAllQuizInfo() {
+    let url = "quizapp/quizzes/quizInfo"; // file name or server-side process name
     const response = await fetch(url);
     if (!response.ok) {
         alert("Error fetching quizzes. \n\n" + "Status code: " + response.status);
@@ -31,7 +29,7 @@ async function fetchQuizzes() {
             let select = document.querySelector("#cmbTopic");
             let html = "";
             for (let quiz of data) {
-                console.log(quiz.quizID, quiz.quizTitle);
+//                console.log(quiz.quizID, quiz.quizTitle);
                 html += `<option value="${quiz.quizID}">${quiz.quizTitle}</option>`;
             }
             select.innerHTML = html;
@@ -67,7 +65,7 @@ function startQuiz() {
  */
 async function getJSON(quizId) {
     console.log(quizId); //not used for the moment
-    let url = `quizapp/quizzes/` + quizId; // file name or server-side process name
+    let url = `quizapp/quizzes/` + quizId;
     const response = await fetch(url);
     if (!response.ok) {
         alert("Error fetching quizzes. \n\n" + "Status code: " + response.status);
@@ -76,38 +74,34 @@ async function getJSON(quizId) {
         //If there is an exception, the backend returns text with an ERROR field
         if (data.ERROR) {
             alert("Error fetching quizzes. \n\n" + data.ERROR);
-        } else {
-            //Parse the JSON data and build a quiz
-            //        buildQuiz(xmlhttp.responseText); execute when server responds
-//                console.log(data.quizTitle, data.questions);
-                buildQuiz(data);
+        } else {                     
+            //Build quiz HTML
+            buildQuiz(data);
         }
     }
     //Reveal #theQuiz
     document.querySelector("#theQuiz").classList.remove("hidden");
+
 }
 
 /**
- * Accepts a JSON file from the AJAX call and outputs it to the
- * global quizData[] array; then constructs HTML that goes into the
- * quizArea div.
+ * Accepts a quiz object from the Fetch call and 
+ * then constructs HTML that goes into the quizArea div.
  * @param {Object} quizData the quiz object
  */
-function buildQuiz(quizData) {
-    let quizTitleArea = document.querySelector("#quizTitle");
+function buildQuiz(data) {
     let quizArea = document.querySelector("#quizArea");
     let tabContainer = document.querySelector("#tabContainer");
-    
-    console.log(quizData);
 
     //reset elements of the quiz in case a new quiz is started
     tabContainer.innerHTML = "";
     quizArea.innerHTML = "";
-    correctAnswerText = [];
+    
+    quizData = data;
+    
+    document.querySelector("#quizTitle").innerHTML = `<h1>${quizData.quizTitle}</h1>`; //add Title
 
-    quizTitleArea.innerHTML = `<h1>${quizData.quizTitle}</h1>`; //add Title
-
-//    addDevButton(quizTitleArea); //add random answer devButton to title area
+    addDevButton(quizData); //add random answer devButton to title area
 
     let tabHTML = "";
     for (let i = 0; i < quizData.questions.length; i++) {
@@ -144,7 +138,7 @@ function buildChoices(qChoices, qNumber) {
     let choicesHTML = "";
     for (let j = 0; j < qChoices.length; j++) {
         choicesHTML +=
-                `<input type = "radio" name = "${qNumber}" value="${qChoices[j]}" /> ` +
+                `<input type = "radio" name = "${qNumber}" value="${j}" /> ` +
                 `${qChoices[j]} <br/>`;
     }
     //record the correct answer for this question in a global array
@@ -157,21 +151,21 @@ function buildChoices(qChoices, qNumber) {
 /**
  * Called by buildQuiz to add DevButton to Quiz in the Title Area
  * Thanks, Steve!
- * @param {element} quizTitleArea #quizTitleArea
+ * 
  */
-function addDevButton(quizTitleArea) {
+function addDevButton() {
+    let quizTitleArea = document.querySelector("#quizTitle");
+
     let devButton = '<div class = "devButtonArea">';
     devButton +=
             '<button id = "devButton" class = "developerButton">Generate Random Answers</button>';
     devButton += "</div>";
     quizTitleArea.innerHTML += devButton;
 
-    //Change #Question to #Q for querySelectorAll in case < 10 questions
-    let tabLabel = "#Question";
-    if (quizData.questions.length > 10) {
-        tabLabel = "#Q";
-    }
+    //Change #Question to #Q for querySelectorAll in case > 10 questions
+    let tabLabel = quizData.questions.length <= 10 ? "#Question" : "#Q";
 
+    //Loop through questions and check a random radio button for each
     document.querySelector("#devButton").addEventListener("click", () => {
         for (let i = 1; i <= quizData.questions.length; i++) {
             let buttons = document.querySelectorAll(
@@ -192,35 +186,42 @@ function addDevButton(quizTitleArea) {
 function submitAnswers() {
     let userAnswers = document.querySelectorAll("input[type='radio']:checked");
     let userAnswersValues = [];
-    let numberCorrect = 0;
+    let score = 0;
+    let totalPts = 0;
+
+    console.log(quizData);
 
     //make sure the user has answered all questions
     if (userAnswers.length !== quizData.questions.length) {
         alert("You must answer all of the questions.");
         return;
     }
+    
     //tally the correct answers
     for (let i = 0; i < userAnswers.length; i++) {
+        const questionVal = quizData.points[i];
+        totalPts += questionVal;
         userAnswersValues.push(userAnswers[i].value);
-        if (userAnswers[i].value === correctAnswerText[i]) {
-            numberCorrect++;
+        if (Number(userAnswersValues[i]) === quizData.questions[i].answer) {
+            score += questionVal;
         }
     }
     //show the user their score
     let answersHTML =
             `<div class = "yourScore">Your Score: ` +
-            `${numberCorrect} / ${quizData.questions.length} </div>`;
+            `${score} / ${totalPts} </div>`;
 
-    answersHTML += buildTable(userAnswersValues);
+    answersHTML += buildTable(userAnswersValues, quizData);
 
     document.querySelector("#answersArea").innerHTML = answersHTML;
 
-    createQuizRecord(userAnswersValues, numberCorrect);
+    createQuizRecord(userAnswersValues, score);
 }
 
 /**
  * Called by submitAnswers function to build a table of results
  * @param {Array} userAnswers user's answers
+ * @param {Obj} quizData The data to be used for the quiz
  * @returns string with HTML table
  */
 function buildTable(userAnswers) {
@@ -235,12 +236,21 @@ function buildTable(userAnswers) {
     tableHTML += "<th>Score</th>";
     tableHTML += "</tr>";
 
+    let correctAnswers = [];
+    for (let q of quizData.questions) {
+        correctAnswers.push(q.answer);
+    }
+    console.log(correctAnswers);
+
     for (let i = 0; i < userAnswers.length; i++) {
+        const choicesText = quizData.questions[i].choices;
+        const userAnsIndex = Number(userAnswers[i]);
+        
         //check to see if the answer is right -- if so, row score is 1
         //and no class is added; if not, score is 0 and class is 'incorrect'
         let questionScore = 0;
-        if (userAnswers[i] === correctAnswerText[i]) {
-            questionScore = 1;
+        if (userAnsIndex === quizData.questions[i].answer) {
+            questionScore = quizData.points[i];
             tableHTML += "<tr>";
         } else {
             tableHTML += "<tr class = 'incorrect'>";
@@ -248,8 +258,8 @@ function buildTable(userAnswers) {
         //now add the row data
         tableHTML += `<td>Question ${i + 1}</td>`;
         tableHTML += `<td>${quizData.questions[i].questionText}</td>`;
-        tableHTML += `<td>${correctAnswerText[i]}</td>`;
-        tableHTML += `<td>${userAnswers[i]}</td>`;
+        tableHTML += `<td>${choicesText[correctAnswers[i]]}</td>`;
+        tableHTML += `<td>${choicesText[userAnsIndex]}</td>`;
         tableHTML += `<td>${questionScore}</td>`;
         tableHTML += "</tr>";
     }
@@ -260,20 +270,20 @@ function buildTable(userAnswers) {
 /**
  * Called by submitAnswers to create a record Object when the user
  * submits their answers.
- * @param {Array} userAnswers Array of strings containing ACs
- * @param {Number} numberCorrect The total number user got correct
+ * @param {Array} userAnswers Array of indexes
+ * @param {Number} score The total number user got correct
  */
-function createQuizRecord(userAnswers, numberCorrect) {
+function createQuizRecord(userAnswers, score) {
     let datetime = new Date().toISOString();
     let quizRecord = {
         user: user,
         dateTime: datetime,
         userAnswers: userAnswers,
-        score: numberCorrect,
-        quiz: quizData,
+        score: score,
+        quizID: quizData.quizID,
     };
 
-    addRecordToCollection(quizRecord);
+//    postResult(quizRecord);
 }
 
 /**
@@ -281,10 +291,8 @@ function createQuizRecord(userAnswers, numberCorrect) {
  * the server for storage in JSON format.
  * @param {Object} quizRecord quizRecord object 
  */
-function addRecordToCollection(quizRecord) {
-    let account = "londonj";
-    let collection = "sampleResults";
-    let url = `https://assignment0.com/jsonstore/webservice/${account}/collections/${collection}/records`;
+function postResult(quizRecord) {    
+    let url = `quizapp/quizResults`;
     let method = "POST";
     let jsonString = JSON.stringify(quizRecord);
     let payload = JSON.stringify({jsonString: jsonString});
