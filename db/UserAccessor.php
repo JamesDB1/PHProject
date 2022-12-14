@@ -9,6 +9,11 @@ class UserAccessor {
     private $insertString = "INSERT INTO quizappuser VALUES " .
             "(:username, :password, :permissionLevel)";
     private $insertStatement = NULL;
+    private $deleteString = "DELETE FROM quizappuser WHERE username = :username ";
+    private $deleteStatement = NULL;
+    private $updateString = "UPDATE quizappuser SET " .
+            "(password = :password, permissionLevel = :permissionLevel WHERE username = :username)";
+    private $updateStatement = NULL;
 
     public function __construct() {
         $this->conn = connect_db();
@@ -20,6 +25,16 @@ class UserAccessor {
         ChromePhp::log("....constructing... success.....");
         if (is_null($this->insertStatement)) {
             throw new Exception("bad statement: '" . $this->insertString . "'");
+        }
+
+        $this->deleteStatement = $this->conn->prepare($this->deleteString);
+        if (is_null($this->deleteStatement)) {
+            throw new Exception("bad statement: '" . $this->deleteString . "'");
+        }
+
+        $this->updateStatement = $this->conn->prepare($this->updateString);
+        if (is_null($this->updateStatement)) {
+            throw new Exception("bad statement: '" . $this->updateString . "'");
         }
     }
 
@@ -115,6 +130,49 @@ class UserAccessor {
         } finally {
             if (!is_null($this->insertStatement)) {
                 $this->insertStatement->closeCursor();
+            }
+            return $success;
+        }
+    }
+
+    public function deleteAccount($user) {
+        $username = $user->getUsername();
+
+        try {
+            $this->deleteStatement->bindParam(":username", $username);
+            $succ = $this->insertStatement->execute();
+            //Determine if a row was modified;
+            $rc = $this->insertStatement->rowCount();
+            $success = $rc; //1 = good; 0 = failed
+        } catch (Exception $ex) {
+            $success = 0;
+        } finally {
+            if (!is_null($this->deleteStatement)) {
+                $this->deleteStatement->closeCursor();
+            }
+            return $success;
+        }
+    }
+
+    public function updateAccount($user) {
+        $username = $user->getUsername();
+        $password = $user->getPassword();
+        $permission = $user->getPermissionLevel();
+
+        try {
+            $this->updateStatement->bindParam(":username", $username);
+            $this->updateStatement->bindParam(":password", $password);
+            $this->updateStatement->bindParam(":permissionLevel", $permission);
+
+            $succ = $this->updateStatement->execute();
+            //Determine if a row was modified;
+            $rc = $this->updateStatement->rowCount();
+            $success = $rc; //1 = good; 0 = failed
+        } catch (PDOException $ex) {
+            $success = 0;
+        } finally {
+            if (!is_null($this->updateStatement)) {
+                $this->updateStatement->closeCursor();
             }
             return $success;
         }

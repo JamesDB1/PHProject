@@ -40,9 +40,6 @@ async function postAccount(username, password) {
         password: password,
         permissionLevel: "USER",
     }
-    
-    console.log("JS USER OBJ")
-    console.log(user);
 
     const resp = await fetch(url, {
         method: "POST",
