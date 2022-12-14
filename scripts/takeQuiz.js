@@ -12,7 +12,7 @@ window.onload = function () {
             .querySelector("#tabContainer")
             .addEventListener("click", handleTabClick);
     document.querySelector("#btnStart").addEventListener("click", startQuiz);
-    document.querySelector("#btnSubmit").addEventListener("click", submitAnswers);    
+    document.querySelector("#btnSubmit").addEventListener("click", submitAnswers);
     fetchAllQuizInfo();
 
 };
@@ -38,7 +38,7 @@ async function fetchUser() {
                 if (u.username.toLowerCase() === txtUser.toLowerCase()) {
                     user = u;
                     break;
-                } 
+                }
             }
         }
     }
@@ -64,7 +64,6 @@ async function fetchAllQuizInfo() {
             let select = document.querySelector("#cmbTopic");
             let html = "";
             for (let quiz of data) {
-//                console.log(quiz.quizID, quiz.quizTitle);
                 html += `<option value="${quiz.quizID}">${quiz.quizTitle}</option>`;
             }
             select.innerHTML = html;
@@ -75,11 +74,11 @@ async function fetchAllQuizInfo() {
 /**
  * Called when Start Quiz button is clicked
  */
-async function startQuiz() {    
+async function startQuiz() {
     startTime = new Date();
     await fetchUser();
     if (!user) {
-        alert("You must enter your name before you can begin.");
+        alert("You must enter a valid username before you can begin.");
         return;
     }
 
@@ -99,7 +98,7 @@ async function startQuiz() {
  * and then calls buildQuiz using the response text
  * @param {type} quizId - The quiz that will be displayed
  */
-async function getJSON(quizId) {     
+async function getJSON(quizId) {
     let url = `quizapp/quizzes/` + quizId;
     const response = await fetch(url);
     if (!response.ok) {
@@ -136,7 +135,7 @@ function buildQuiz(data) {
 
     document.querySelector("#quizTitle").innerHTML = `<h1>${quizData.quizTitle}</h1>`; //add Title
 
-    addDevButton(quizData); //add random answer devButton to title area
+    addDevButton(); //add random answer devButton to title area
 
     let tabHTML = "";
     for (let i = 0; i < quizData.questions.length; i++) {
@@ -146,7 +145,7 @@ function buildQuiz(data) {
 
     for (let i = 0; i < quizData.questions.length; i++) {
         let q = quizData.questions[i];
-        
+
         questionHTML = `<div id = "Question${i + 1}" class = tabContent>`; //open tabContent div
         questionHTML += `<div class = questionNumber>Question ${i + 1}</div>`;
         questionHTML += `<div class = questionBody>`; //open questionBody div
@@ -240,8 +239,8 @@ function submitAnswers() {
     }
     //show the user their score
     let answersHTML =
-            `<div class = "yourScore">Your Score: ` +
-            `${score} / ${totalPts} </div>`;
+            `<div class = "yourScore"><div>Your Score: ` +
+            ` ${score} / ${totalPts}</div></div>`;
 
     answersHTML += buildTable(userAnswersValues, quizData);
 
@@ -272,7 +271,7 @@ function buildTable(userAnswers) {
     for (let q of quizData.questions) {
         correctAnswers.push(q.answer);
     }
-    
+
     for (let i = 0; i < userAnswers.length; i++) {
         const choicesText = quizData.questions[i].choices;
         const userAnsIndex = Number(userAnswers[i]);
@@ -322,8 +321,7 @@ function createQuizResult(userAnswers, score) {
         scoreDenominator: denom,
         quiz: quizData,
     };
-
-    console.log("QR OBJ: " + quizResult);
+    
     postResult(quizResult);
 }
 
@@ -333,24 +331,28 @@ function createQuizResult(userAnswers, score) {
  * @param {Object} quizResult quizResult object 
  */
 async function postResult(quizResult) {
-    console.log("USER" + user);
     let url = `quizapp/quizResults/user/` + user.username;
     const resp = await fetch(url, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(quizResult),
     });
-    
+
     const msg = await resp.json();
-    
-    if (msg === 1){
-        alert("QuizResult POST to database succeeded.");
-    } else if (msg === 0){
+
+    if (msg === 1) {
+        document.querySelector(".yourScore").innerHTML += 
+                " <div class='yourStatus'>(Your quiz result has been successfully saved.)</div>";
+    } else if (msg === 0) {
         alert("QuizResult POST to database FAILED.");
     } else {
         //If there is an exception, the backend returns a JSON object with an ERROR field
-        alert("Server-side error. \n\n" + ERROR.msg);
-}}
+        alert("Server-side error. \n\n" + msg.ERROR);
+    }
+    document.querySelector("#btnStart").classList.add("disabledBtn");
+    document.querySelector("#btnSubmit").classList.add("disabledBtn");
+    document.querySelector("#devButton").classList.add("disabledBtn");
+}
 
 /**
  * @_______TAB_MANAGEMENT_FUNCTIONS_______

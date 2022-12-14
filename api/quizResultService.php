@@ -1,5 +1,5 @@
 <?php
-
+require_once(__DIR__ . '/../entity/QuizResult.php');
 require_once(__DIR__ . '/../db/QuizResultAccessor.php');
 require_once(__DIR__ . '/../utils/ChromePhp.php');
 

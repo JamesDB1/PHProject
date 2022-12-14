@@ -1,7 +1,7 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: lightblue;
-  padding: 3em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: lightblue;
+    padding: 3em;
 }
 
 section {
@@ -11,198 +11,233 @@ section {
 }
 
 button {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 0.5em 1.5em;
-  border-radius: 5px;
-  font-size: large;
-  margin: 10px 0;
-  cursor: pointer;
-  font-weight: bold;
-  background-color: whitesmoke;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0.5em 1.5em;
+    border-radius: 5px;
+    font-size: large;
+    margin: 10px 0;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: whitesmoke;
 }
 button:hover {
-  background-color: slategray;
-  color: white;
+    background-color: slategray;
+    color: white;
 }
 .disabled {
-  pointer-events: none;
-  opacity: 0.75;
+    pointer-events: none;
+    opacity: 0.75;
 }
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1em;
-  background-color: white;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+    background-color: white;
 }
 th,
 td {
-  border: thin solid grey;
-  padding: 0.5em; 
-  text-align: left;
+    border: thin solid grey;
+    padding: 0.5em;
+    text-align: left;
 }
 td button{
-  padding: 2px 10px;
-  font-size: small;
-  margin: 0;
+    padding: 2px 10px;
+    font-size: small;
+    margin: 0;
 }
 a{
-  display: flex;
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
-  border: thin solid black;
-  justify-content: center;
-  padding: 0.5em;
-  border-radius: 5px;
-  background-color: whitesmoke;
+    display: flex;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+    border: thin solid black;
+    justify-content: center;
+    padding: 0.5em;
+    border-radius: 5px;
+    background-color: whitesmoke;
 }
 a:hover{
-  color: white;
-  background-color: navy;
+    color: white;
+    background-color: navy;
 }
 select{
-  width: 15em;
+    width: 15em;
 }
 #setup{
-  padding: 1em;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: white;  
-}x
+    padding: 1em;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: white;
+}
+x
 #setup span{
-  display: inline-block;
-  font-size: x-large;
-  font-weight: bold;
-  margin: 0 0 0.5em;
+    display: inline-block;
+    font-size: x-large;
+    font-weight: bold;
+    margin: 0 0 0.5em;
 }
 #numResults{
-  font-size: large;
-  font-weight: bold;
-  margin: 1em;
+    font-size: large;
+    font-weight: bold;
+    margin: 1em;
 }
 .wrapper {
-  margin: 0 auto;
-  width: 1200px;
-  background-color: #d2f5f2;
-  border: thin solid black;
-  padding: 1em;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+    margin: 0 auto;
+    width: 1200px;
+    background-color: #d2f5f2;
+    border: thin solid black;
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 .results_wrapper {
-  background-color:#a6dffa;
-  width: 1000px;
+    background-color:#a6dffa;
+    width: 1000px;
 }
 
 .home_wrapper{
-  background-color: #fef8f0;
-  width: 1000px;
+    background-color: #fef8f0;
+    width: 1000px;
 }
 .usernameArea{
-  display: flex;
-  flex-direction: column;
-  width: 25%;
+    display: flex;
+    flex-direction: column;
+    width: 25%;
 }
 .wrapper a{
-  width: 5em;
+    width: 5em;
 }
 .home_wrapper button{
-  width: 10em;
+    width: 10em;
 }
 .setupTopic, .setupUsername{
-  margin: 1em 0;
+    margin: 1em 0;
 }
 .setupTopic select, .setupUsername input{
-  margin: 0 1em;
+    margin: 0 1em;
 }
 .tab {
-  float: left;
-  border: solid thin grey;
-  border-bottom: none;
-  text-align: center;
-  padding: 10px 0;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  background-color: whitesmoke;
-  font-size: small;
+    float: left;
+    border: solid thin grey;
+    border-bottom: none;
+    text-align: center;
+    padding: 10px 0;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    background-color: whitesmoke;
+    font-size: small;
 }
 .tab:hover {
-  cursor: pointer;
-  background-color: white;
+    cursor: pointer;
+    background-color: white;
 }
 .active {
-  background-color: white;
-  font-weight: bold;
+    background-color: white;
+    font-weight: bold;
 }
 .hidden {
-  display: none;
+    display: none;
 }
 .tabContent {
-  clear: left;
-  border: thin solid grey;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: white;
+    clear: left;
+    border: thin solid grey;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: white;
 }
 .questionNumber {
-  border: thin solid black;
-  padding: 0.5em;
-  font-size: large;
-  font-weight: bold;
-  border-radius: 5px;
-  background-color: #a6dffa;
+    border: thin solid black;
+    padding: 0.5em;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #a6dffa;
 }
 .questionBody {
-  line-height: 1.6;
-  padding-left: 1em;
+    line-height: 1.6;
+    padding-left: 1em;
 }
 .questionBody input {
-  margin-left: 2em;
+    margin-left: 2em;
 }
 .questionBody p {
-  margin: 10px;
+    margin: 10px;
 }
 .yourScore {
-  background-color: lightgreen;
-  padding: 1em;
-  border: thin solid black;
-  font-size: large;
-  font-weight: bold;
-  border-radius: 5px;
+    background-color: lightgreen;
+    padding: 1em;
+    border: thin solid black;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+}
+.yourStatus{    
+    margin-left: auto;
 }
 .incorrect {
-  color: red;
+    color: red;
 }
 .devButtonArea{
-  display: flex;
-  justify-content: right;
+    display: flex;
+    justify-content: right;
 }
 .developerButton{
-  font-size: small;
-  background-color:#a6dffa;
-  margin-right: 15px;
+    font-size: small;
+    background-color:#a6dffa;
+    margin-right: 15px;
 }
 .welcome{
-  font-size: large;
+    font-size: large;
 }
 .welcome span{
-  font-weight: bold;  
-  font-size: larger;
+    font-weight: bold;
+    font-size: larger;
 }
 .home_link{
-  display: flex;
-  justify-content: right;
-  margin-top: 10px;
+    display: flex;
+    justify-content: right;
+    margin-top: 10px;
+}
+.home_link a{
+    width: fit-content;
+    margin-left: 10px;
 }
 .addBorder{
-  border: thin solid black;
+    border: thin solid black;
 }
 .buttonHolder{
-  text-align: center;
+    text-align: center;
 }
 .tempMenu{
-    border: thin dashed blue;
-    
+    border: medium dotted blue;
+    padding: 1em;
+
 }
+.tempMenu a {
+    margin: 10px;
+}
+.loginMenu{
+    border: medium dotted black;
+    padding: 1em;
+    margin-top: 1em;
+
+}
+.loginMenu a {
+    margin: 10px;
+}
+.disabledBtn {
+    pointer-events: none;
+    opacity: 0.5;
+}
+.inputLabel{
+    font-weight: bold;
+    margin-right: 0.5em;
+}
+.inputRequired{
+    margin-right: 1em;
+}
+
 

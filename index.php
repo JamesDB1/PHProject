@@ -8,17 +8,18 @@
     </head>
     <body>
         <div class="container">
+            <h1>PHP Project - QuizApp Deluxe</h1>
             <div class="tempMenu">
                 <h2>Temporary Menu</h2>
-                <a href ="takeQuiz.php">Take a quiz</a> |
-                <a href ="question.php">Search questions (ours)</a> |
-                <a href="quizSearch.php">Search quizzes (ours)</a>
+                <a href ="takeQuiz.php">Take a quiz</a> 
+                <a href ="question.php">Search questions</a> 
+                <a href="quizSearch.php">Search quizzes</a>
             </div>
-            <div>
-                <div>Quiz App</div>
+            <div class='loginMenu'>
+                <h2>Login Menu</h2>
                 <div>
                     <a id="loginButton" href="login-js.php">Log in</a>
-                    <a id="createAccountButton" href="#">Sign up</a>
+                    <a id="createAccountButton" href="newUser-guest.php">Sign up</a>
                 </div>
             </div>
             <h3>Welcome, Guest!</h3>
