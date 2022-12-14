@@ -22,7 +22,7 @@ if ($method === "GET") {
 function doGet() {
     try {
         $ua = new UserAccessor();
-        $results = $ua->getAllUsers();
+        $results = $ua->getAllAccounts();
         $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
         echo $resultsJson;
     } catch (Exception $e) {
