@@ -63,15 +63,6 @@ class QuizResult implements JsonSerializable
         return $this->scoreDenominator;
     }
     
-    public function getAnswersString(){
-        $res = "";
-        for($i = 0; $i < count($this->answers); $i++){
-            $res .= $this->answers[$i] . $i < count($this->answers) - 1 ? "|" : "";
-        }
-        return $res;
-                
-    }
-
     public function jsonSerialize()
     {
         return get_object_vars($this);

@@ -136,9 +136,7 @@ x
     background-color: white;
     font-weight: bold;
 }
-.hidden {
-    display: none;
-}
+
 .tabContent {
     clear: left;
     border: thin solid grey;
@@ -174,7 +172,7 @@ x
     display: flex;
     flex-direction: row;
 }
-.yourStatus{    
+.yourStatus{
     margin-left: auto;
 }
 .incorrect {
@@ -236,8 +234,65 @@ x
     font-weight: bold;
     margin-right: 0.5em;
 }
+.inputLabelUser{
+    width:  200px;
+}
+.inputPanel {
+    background-color: azure;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    margin: 2px;
+
+}
+.textBoxContainer{
+    display: flex;
+    width: 190px;
+    justify-content: right;
+}
 .inputRequired{
     margin-right: 1em;
 }
+.crudTable th,td{
+    width: 150px;
+}
+.crudTable table{
+    width: 600px;
+}
+.crudButtonTd{
+    text-align: center;
+}
+.crudButtonTd button {
+    margin-right: 4px;
+}
+.crudTable tr:hover {
+    background-color: lightgreen;
+}
 
+.highlighted {
+    background-color: yellow;
+}
+.buttonArea button, .inputPanel button{
+    padding: 5px 10px;
+    font-size: small;
+    width: 80px;
+}
+.inputField{
+    width: 200px;
+}
+#btnCancel{
+    margin-left: 15px;
+    background-color: pink;
+}
+#btnCancel:hover{
+    background-color: #ff6666;
+}
 
+.hidden {
+    display: none;
+}

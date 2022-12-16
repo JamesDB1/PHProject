@@ -3,42 +3,59 @@
     <head>
         <meta charset="UTF-8">
         <title>Home Page</title>
-        <script src="scripts/quizSearch.js"></script>
+        <script src="scripts/modifyUser.js"></script>
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
+        <h2>Admin - Manage User Accounts</h2>
         <div class="container">
-            <h1>PHP Project - QuizApp Deluxe</h1>
-            <div class="tempMenu">
-                <h2>Temporary Menu</h2>
-                <a href ="takeQuiz.php">Take a quiz</a> 
-                <a href ="question.php">Search questions</a> 
-                <a href="quizSearch.php">Search quizzes</a>
+            <div class="buttonArea">        
+                <button id="btnAdd">Add</button>
+                <button id="btnDelete">Delete</button>
+                <button id="btnUpdate">Update</button>
+                <button id="btnCancel">Cancel</button>
             </div>
-            <div class='loginMenu'>
-                <h2>Login Menu</h2>
-                <div>
-                    <a id="loginButton" href="login-js.php">Log in</a>
-                    <a id="createAccountButton" href="newUser-guest.php">Sign up</a>
+            <div class="inputPanel">
+                <div class="inputContainer">
+                    <div class="inputLabelUser">Username:</div>
+                    <div class="textBoxContainer"><input class="inputField formData" id="txtUsername"></div>
                 </div>
-            </div>
-            <h3>Welcome, Guest!</h3>
-
-            <div>
-                <section id="tagSearch">
-                    <h4>Quiz Search</h4>
-
-                    <div>
-                        <label for="searchInput" class="form-label">Tags</label>
-                        <input type="text" class="form-control" id="searchInput" aria-describedby="searchHelp">
-                        <div id="searchHelp" class="form-text">Enter a search word or phrase.</div>
+                <div class="inputContainer">
+                    <div class="inputLabelUser">Permission Level:</div>
+                    <div class = "textBoxContainer">
+                        <select id="cmbPermissionLevel" class="formData inputField">
+                            <option value="USER">USER</option>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="SUPER">SUPER</option>
+                        </select>
                     </div>
-                    <button id="searchButton">Search</button>
-                </section>
-                <section>
-                    <div id="quizzes"></div>
-                </section>
+                </div>
+                <div class="inputContainer">
+                    <div class="inputLabelUser">Password:</div>
+                    <div class="textBoxContainer"><input class="formData inputField" id="txtPassword" type="password"></div>
+                </div>
+
+                <div class="inputContainer">
+                    <button id="btnSubmit">Done</button>
+                </div>
+            </div> 
+            <div class="crudTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Permission Level</th>
+                            <th class="hidden">Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--  Added in JS-->
+                    </tbody>
+                </table>
             </div>
+
+
+
         </div>
     </body>
 </html>
