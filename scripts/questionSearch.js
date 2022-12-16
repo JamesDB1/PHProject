@@ -25,7 +25,7 @@ function getResultsByTags(e) {
     let tags = document.querySelector("#tags").value;
     let url = "quizapp/questions/search:tags=" + tags;
     let title = "Quiz Results that contain " + tags + " in their tag";
-    let element = document.querySelector(".quizResults");
+    let element = document.querySelector(".searchTable");
     buildResultsSection(url, element, title);
 }
 

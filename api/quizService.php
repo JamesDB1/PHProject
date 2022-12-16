@@ -66,12 +66,12 @@ function doGet() {
 }
 
 function doDelete() {
-    if (isset($_GET['itemid'])) { 
-        $id = $_GET['itemid']; 
+    if (isset($_GET['quizID'])) { 
+        $id = $_GET['quizID']; 
         // Only the ID of the item matters for a delete,
         // but the accessor expects an object, 
         // so we need a dummy object.
-        $quizItemObj = new Quiz($id, "dummyCat", 2, "ab", 0, "asd", "asd", 0, "asd");
+        $quizItemObj = new Quiz($id, "Dummy", "Dummy", "Dummy");
 
         // delete the object from DB
         $mia = new QuizAccessor();
@@ -85,13 +85,13 @@ function doDelete() {
 
 // aka CREATE
 function doPost() {
-    if (isset($_GET['quizid'])) { 
+    if (isset($_GET['quizID'])) { 
         // The details of the item to insert will be in the request body.
         $body = file_get_contents('php://input');
         $contents = json_decode($body, true);
 
         // create a Quiz object
-        $quizItemObj = new Quiz($contents['quizID'], $contents['name'], $contents['points']);
+        $quizItemObj = new Quiz($contents['quizID'], $contents['quizTitle'], $contents['questions'], $contents['points']);
         // add the object to DB
         $mia = new QuizAccessor();
         $success = $mia->addQuiz($quizItemObj);
@@ -104,13 +104,13 @@ function doPost() {
 
 // aka UPDATE
 function doPut() {
-    if (isset($_GET['itemid'])) { 
+    if (isset($_GET['quizID'])) { 
         // The details of the item to update will be in the request body.
         $body = file_get_contents('php://input');
         $contents = json_decode($body, true);
 
         // create a Quiz object
-        $quizItemObj = new Quiz($contents['quizID'], $contents['name'], $contents['level'], $contents['type'], $contents['ritual'], $contents['castingTime'],$contents['components'],$contents['concentration'],$contents['source']);
+        $quizItemObj = new Quiz($contents['quizID'], $contents['quizTitle'], $contents['questions'], $contents['points']);
 
         // update the object in the  DB
         $mia = new QuizAccessor();

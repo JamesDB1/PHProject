@@ -65,6 +65,7 @@ class QuizAccessor {
     }
 
     public function getAllQuizzes() {
+        ChromePhp::log("CHeck");
         $results = [];
         $stmt = null;
         try {
@@ -158,4 +159,103 @@ class QuizAccessor {
         }
     }
 
+    public function deleteQuiz($quiz) {
+        $success = false;
+
+        $quizid = $quiz->getQuizID(); // only the ID is needed
+
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("delete from quizquestion where quizid = :quizid; delete from quiz where quizid = :quizid");
+            $stmt->bindParam(":quizid", $quizid);
+            $success = $stmt->execute();
+            $rc = $stmt->rowCount();
+        }
+        catch (PDOException $e) {
+            ChromePhp::log($e);
+            $success = false;
+        }
+        finally {
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
+            }
+            return $success;
+        }
+    }
+
+    
+    public function addQuiz($quiz) {
+        $success = false;
+        ChromePhp::log("CHECK");
+        $quizid = $quiz->getQuizID();
+        $title = $quiz->getQuizTitle();
+        $questions = $quiz->getQuestions();
+        $points = $quiz->getPoints();
+        $values = "(";
+        for($i = 0; $i < (count($questions) - 1); $i++){
+            $values .= "'" . $quizid . "', '" . $questions[$i] . "', " . $points[$i] . "), (";
+        }
+        $values .= "'" . $quizid . "', '" . $questions[(count($questions) - 1)] . "', " . $points[(count($questions) - 1)] . ")";
+        
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("insert into quiz values (:quizid, :title); insert into quizquestion values :values ");
+            $stmt->bindParam(":quizid", $quizid);
+            $stmt->bindParam(":title", $title);
+            $stmt->bindParam(":values", $values);
+            $success = $stmt->execute();
+            $rc = $stmt->rowCount();
+        }
+        catch (PDOException $e) {
+            ChromePhp::log($e);
+            $success = false;
+        }
+        finally {
+            ChromePhp::log($values);
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
+            }
+            return $success;
+        }
+    }
+
+    /**
+     * Updates a menu item in the database.
+     * 
+     * @param MenuItem $item an object of type MenuItem, the new values to replace the database's current values
+     * @return boolean indicates if the item was updated
+     */
+    public function updateQuiz($quiz) {
+        $success = false;
+
+        ChromePhp::log("CHECK");
+        $quizid = $quiz->getQuizID();
+        $title = $quiz->getQuizTitle();
+        $questions = $quiz->getQuestions();
+        $points = $quiz->getPoints();
+        $values = "(";
+        for($i = 0; $i < (count($questions) - 1); $i++){
+            $values .= "'" . $quizid . "', '" . $questions[$i] . "', " . $points[$i] . "), (";
+        }
+        $values .= "'" . $quizid . "', '" . $questions[(count($questions) - 1)] . "', " . $points[(count($questions) - 1)] . ")";
+        
+        try {
+            $conn = connect_db();
+            $stmt = $conn->prepare("update set quiz values (:quizid, :title); insert into quizquestion values :values ");
+            $stmt->bindParam(":quizid", $quizid);
+            $stmt->bindParam(":title", $title);
+            $stmt->bindParam(":values", $values);
+            $success = $stmt->execute();
+            $rc = $stmt->rowCount();
+        }
+        catch (PDOException $e) {
+            $success = false;
+        }
+        finally {
+            if (!is_null($this->updateStatement)) {
+                $this->updateStatement->closeCursor();
+            }
+            return $success;
+        }
+    }
 }

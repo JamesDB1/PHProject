@@ -7,11 +7,14 @@ window.onload = function () {
     document.querySelector("#AddButton").addEventListener("click", addQuiz);
     document.querySelector("#DeleteButton").addEventListener("click", deleteQuiz);
     document.querySelector("#UpdateButton").addEventListener("click", updateQuiz);
+    document.querySelector("#DoneButton").addEventListener("click", processForm);
     document.querySelector("#CancelButton").addEventListener("click", cancelAddUpdate);
     document.querySelector("#SearchButton").addEventListener("click", doSearch);
 
     // add event handler for selections on the table
     document.querySelector("#tableSearch").addEventListener("click", handleRowClick);
+    document.querySelector("#tableSearch").addEventListener("dblclick", addToUpdateTbl);
+    document.querySelector("#tableUpdate").addEventListener("dblclick", removeFromUpdateTbl);
 
     getAllQuizzes();
 };
@@ -28,7 +31,6 @@ function getAllQuizzes() {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             let resp = xmlhttp.responseText;
-            console.log(resp);
             if (resp.search("ERROR") >= 0) {
                 alert("oh no... see console for error");
                 console.log(resp);
@@ -51,7 +53,6 @@ function getAllQuestions() {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             let resp = xmlhttp.responseText;
-            console.log(resp);
             if (resp.search("ERROR") >= 0) {
                 alert("oh no... see console for error");
                 console.log(resp);
@@ -65,13 +66,12 @@ function getAllQuestions() {
     xmlhttp.send();
 }
 
-function getQuestionsForQuiz(quizId) {     
+function getQuestionsForQuiz(quizId) {
     let url = `quizapp/quizzes/` + quizId;
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             let resp = xmlhttp.responseText;
-            console.log(resp);
             if (resp.search("ERROR") >= 0) {
                 alert("oh no... see console for error");
                 console.log(resp);
@@ -84,7 +84,7 @@ function getQuestionsForQuiz(quizId) {
     xmlhttp.send();
 }
 
-function doSearch(e){
+function doSearch(e) {
     (quizOrQuestion === "quiz") ? quizSearch(e) : questionSearch(e);
 }
 
@@ -96,7 +96,6 @@ function questionSearch(e) {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             let resp = xmlhttp.responseText;
-            console.log(resp);
             if (resp.search("ERROR") >= 0) {
                 alert("oh no... see console for error");
                 console.log(resp);
@@ -117,7 +116,6 @@ function quizSearch(e) {
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             let resp = xmlhttp.responseText;
-            console.log(resp);
             if (resp.search("ERROR") >= 0) {
                 alert("oh no... see console for error");
                 console.log(resp);
@@ -152,6 +150,28 @@ function handleRowClick(e) {
     document.querySelector("#UpdateButton").removeAttribute("disabled");
 }
 
+function addToUpdateTbl(e) {
+    let theTable = document.querySelector("#tableUpdate");
+    var tds = document.querySelector(".highlighted").querySelectorAll("td");
+    let row = theTable.insertRow(1);
+
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    let cell3 = row.insertCell(2);
+    let cell4 = row.insertCell(3);
+    let cell5 = row.insertCell(4);
+    
+    cell1.innerHTML = tds[0].innerHTML;
+    cell2.innerHTML = tds[1].innerHTML;
+    cell3.innerHTML = tds[2].innerHTML;
+    cell4.innerHTML = tds[3].innerHTML;
+    cell5.innerHTML = "<input type='number' value='" + 0 + "'>";
+}
+
+function removeFromUpdateTbl(e) {
+    e.target.parentElement.remove();
+}
+
 function cancelAddUpdate() {
     hideUpdatePanel();
     getAllQuizzes();
@@ -166,22 +186,29 @@ function processForm() {
     // the JSON string will be included as part of the message body 
     // (not a form parameter).
     var quizID = document.querySelector("#quizIDInput").value;
-    var name = document.querySelector("#nameInput").value;
-
+    var quizTitle = document.querySelector("#nameInput").value;
+    let questions = [];
+    let points = [];
+    let table = document.querySelector("#tableUpdate");
+    for(let i = 1; i < table.rows.length; i++){
+        questions.push(table.rows[i].cells[0].innerHTML);
+        points.push(table.rows[i].cells[4].childNodes[0].value);
+    }
 
     var obj = {
         "quizID": quizID,
-        "name": name,
-        "level": level,
-        "type": type
+        "quizTitle": quizTitle,
+        "questions": questions,
+        "points": points
     };
 
-    let url = "quizService/items/" + quizID;
+    let url = "quizapp/quizzes/" + quizID;
     let method = (addOrUpdate === "add") ? "POST" : "PUT";
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             var resp = xmlhttp.responseText;
+            console.log(resp);
             if (resp.search("ERROR") >= 0 || resp != 1) {
                 alert("oh no...");
                 console.log(resp);
@@ -196,12 +223,11 @@ function processForm() {
 
 function deleteQuiz() {
     var id = document.querySelector(".highlighted").querySelector("td").innerHTML;
-    let url = "quizService/items/" + id;
+    let url = "quizapp/quizzes/" + id;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
             var resp = xmlhttp.responseText;
-            console.log(resp);
             if (resp.search("ERROR") >= 0 || resp != 1) {
                 alert("oh no...");
                 console.log(resp);
@@ -269,7 +295,7 @@ function buildTableQues(text) {
     let data = JSON.parse(text);
     let theTable = document.querySelector("#tableSearch");
     let html = theTable.querySelector("tr").innerHTML;
-    html = "<tr><th>Question ID</th><th>Question</th><th>Choices</th><th>Answer</th><th>Action</th></tr>";
+    html = "<tr><th>Question ID</th><th>Question</th><th>Choices</th><th>Answer</th></tr>";
     for (let i = 0; i < data.length; i++) {
         let temp = data[i];
         html += "<tr>";
@@ -281,8 +307,6 @@ function buildTableQues(text) {
         }
         html += "<td>" + choiceStr.slice(0, (choiceStr.length - 2)) + "</td>";
         html += "<td>" + temp.answer + "</td>";
-        html += "<td><a href=quizapp/quizzes/" + temp.quizID + ">Add to Quiz</a></td>";
-        html += "</tr>";
     }
     theTable.innerHTML = html;
 }
@@ -291,7 +315,7 @@ function buildUpdateTable(text) {
     let data = JSON.parse(text);
     let theTable = document.querySelector("#tableUpdate");
     let html = theTable.querySelector("tr").innerHTML;
-    html = "<tr><th>Question ID</th><th>Question</th><th>Choices</th><th>Answer</th><th>Points</th><th>Action</th></tr>";
+    html = "<tr><th>Question ID</th><th>Question</th><th>Choices</th><th>Answer</th><th>Points</th></tr>";
     for (let i = 0; i < data.questions.length; i++) {
         let temp = data.questions[i];
         html += "<tr>";
@@ -304,7 +328,6 @@ function buildUpdateTable(text) {
         html += "<td>" + choiceStr.slice(0, (choiceStr.length - 2)) + "</td>";
         html += "<td>" + temp.answer + "</td>";
         html += "<td><input type='number' value='" + Number(data.points[i]) + "'></td>";
-        html += "<td><a href=quizapp/quizzes/" + temp.quizID + ">Delete from Quiz</a></td>";
         html += "</tr>";
     }
     theTable.innerHTML = html;

@@ -13,6 +13,7 @@
                 <a href ="takeQuiz.php">Take a quiz</a> 
                 <a href="quizSearch.php">Search quizzes and questions</a>
                 <a href="quizzes.php">Search quiz results</a>
+                <a href="question.php">Search question results</a>
             </div>
             <div class='loginMenu'>
                 <h2>Login Menu</h2>

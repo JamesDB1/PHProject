@@ -14,7 +14,7 @@ class QuestionAccessor
         try {
             ChromePhp::log("GetTags");
             $conn = connect_db();
-            $stmt = $conn->prepare("select questionID, questionText, choices, answer from QuizQuestion join Question using(questionID)");
+            $stmt = $conn->prepare("select distinct questionID, questionText, choices, answer from QuizQuestion join Question using(questionID)");
             $stmt->bindParam(":tags", $tags);
             $stmt->execute();
             $dbresults = $stmt->fetchAll(PDO::FETCH_ASSOC);
