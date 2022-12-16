@@ -209,14 +209,32 @@ x
 .buttonHolder{
     text-align: center;
 }
-.tempMenu{
-    border: medium dotted blue;
-    padding: 1em;
 
+/* Add a black background color to the top navigation */
+.menuContainer {
+    overflow: hidden;
 }
-.tempMenu a {
-    margin: 10px;
+
+/* Style the links inside the navigation bar */
+.menuContainer a {
+  float: left;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
 }
+
+/* Add a color to the active/current link */
+.menuContainer a.active {
+  background-color: midnightblue;
+  color: white;
+}
+
+/* Right-aligned section inside the top navigation */
+.menuContainer-right {
+  float: right;
+}
+
 .loginMenu{
     border: medium dotted black;
     padding: 1em;
