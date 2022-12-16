@@ -12,8 +12,9 @@ class UserAccessor {
     private $deleteString = "DELETE FROM quizappuser WHERE username = :username ";
     private $deleteStatement = NULL;
     private $updateString = "UPDATE quizappuser SET " .
-            "(password = :password, permissionLevel = :permissionLevel WHERE username = :username)";
+            "password = :password, permissionLevel = :permissionLevel WHERE username = :username";
     private $updateStatement = NULL;
+    private $conn = NULL;
 
     public function __construct() {
         $this->conn = connect_db();
@@ -140,9 +141,9 @@ class UserAccessor {
 
         try {
             $this->deleteStatement->bindParam(":username", $username);
-            $succ = $this->insertStatement->execute();
+            $succ = $this->deleteStatement->execute();
             //Determine if a row was modified;
-            $rc = $this->insertStatement->rowCount();
+            $rc = $this->deleteStatement->rowCount();
             $success = $rc; //1 = good; 0 = failed
         } catch (Exception $ex) {
             $success = 0;

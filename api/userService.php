@@ -31,7 +31,7 @@ function doGet() {
         $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
         echo $resultsJson;
     } catch (Exception $e) {
-        echo "ERROR " . $e->getMessage();
+        sendErrorText($e->getMessage());
     }
 }
 
@@ -53,14 +53,15 @@ function doPost() {
         $success = $ua->insertAccount($result);
         echo $success;
     } catch (Exception $ex) {
-        sendErrorJson($ex->getMessage());
+        sendErrorText($ex->getMessage());
     }
 }
 
 function doPut() {
+    ChromePhp::log("Inside Put Service");
     $body = file_get_contents('php://input'); // body of HTTP request
     $contents = json_decode($body, true);
-    ChromePhp::log("Inside Put Service");
+
 
     $username = $contents["username"];
     $password = $contents["password"];
@@ -75,7 +76,7 @@ function doPut() {
         $success = $ua->updateAccount($result);
         echo $success;
     } catch (Exception $ex) {
-        sendErrorJson($ex->getMessage());
+        sendErrorText($ex->getMessage());
     }
 }
 
@@ -95,12 +96,11 @@ function doDelete() {
         $success = $ua->deleteAccount($result);
         echo $success;
     } catch (Exception $ex) {
-        sendErrorJson($ex->getMessage());
+        sendErrorText($ex->getMessage());
     }
 }
 
-function sendErrorJson($errMsg) {
-    ChromePhp::log($errMsg);
-    $err = array("ERROR" => $errMsg);
-    echo json_encode($err);
+function sendErrorText($errMsg) {
+    ChromePhp::log($errMsg);    
+    echo "ERROR: ". $errMsg;
 }
