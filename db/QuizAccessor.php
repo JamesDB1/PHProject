@@ -170,12 +170,10 @@ class QuizAccessor {
             $stmt->bindParam(":quizid", $quizid);
             $success = $stmt->execute();
             $rc = $stmt->rowCount();
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             ChromePhp::log($e);
             $success = false;
-        }
-        finally {
+        } finally {
             if (!is_null($stmt)) {
                 $stmt->closeCursor();
             }
@@ -183,7 +181,6 @@ class QuizAccessor {
         }
     }
 
-    
     public function addQuiz($quiz) {
         $success = false;
         ChromePhp::log("CHECK");
@@ -192,11 +189,11 @@ class QuizAccessor {
         $questions = $quiz->getQuestions();
         $points = $quiz->getPoints();
         $values = "(";
-        for($i = 0; $i < (count($questions) - 1); $i++){
+        for ($i = 0; $i < (count($questions) - 1); $i++) {
             $values .= "'" . $quizid . "', '" . $questions[$i] . "', " . $points[$i] . "), (";
         }
-        $values .= "'" . $quizid . "', '" . $questions[(count($questions) - 1)] . "', " . $points[(count($questions) - 1)] . ")";
-        
+        $values .= "'" . $quizid . "', '" . $questions[((count($questions) - 1))] . "', " . $points[(count($questions) - 1)] . ")";
+
         try {
             $conn = connect_db();
             $stmt = $conn->prepare("insert into quiz values (:quizid, :title); insert into quizquestion values :values ");
@@ -205,12 +202,10 @@ class QuizAccessor {
             $stmt->bindParam(":values", $values);
             $success = $stmt->execute();
             $rc = $stmt->rowCount();
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             ChromePhp::log($e);
             $success = false;
-        }
-        finally {
+        } finally {
             ChromePhp::log($values);
             if (!is_null($stmt)) {
                 $stmt->closeCursor();
@@ -231,31 +226,23 @@ class QuizAccessor {
         ChromePhp::log("CHECK");
         $quizid = $quiz->getQuizID();
         $title = $quiz->getQuizTitle();
-        $questions = $quiz->getQuestions();
-        $points = $quiz->getPoints();
-        $values = "(";
-        for($i = 0; $i < (count($questions) - 1); $i++){
-            $values .= "'" . $quizid . "', '" . $questions[$i] . "', " . $points[$i] . "), (";
-        }
-        $values .= "'" . $quizid . "', '" . $questions[(count($questions) - 1)] . "', " . $points[(count($questions) - 1)] . ")";
-        
+        $conn = connect_db();
+        $stmt = $conn->prepare("update quiz set quizTitle = :title where quizID = :quizid");
+
         try {
-            $conn = connect_db();
-            $stmt = $conn->prepare("update set quiz values (:quizid, :title); insert into quizquestion values :values ");
-            $stmt->bindParam(":quizid", $quizid);
             $stmt->bindParam(":title", $title);
-            $stmt->bindParam(":values", $values);
+            $stmt->bindParam(":quizid", $quizid);
             $success = $stmt->execute();
             $rc = $stmt->rowCount();
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             $success = false;
-        }
-        finally {
-            if (!is_null($this->updateStatement)) {
-                $this->updateStatement->closeCursor();
+            echo $e;
+        } finally {
+            if (!is_null($stmt)) {
+                $stmt->closeCursor();
             }
             return $success;
         }
     }
+
 }

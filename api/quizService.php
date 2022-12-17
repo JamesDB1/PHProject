@@ -20,8 +20,8 @@ if ($method === "GET") {
     doDelete();
 } else if ($method === "PUT") {
     doPut();
-} else{
-    //not supported
+} else {
+//not supported
 }
 
 /**
@@ -57,7 +57,7 @@ function doGet() {
             $qa = new QuizAccessor();
             $results = $qa->getAllQuizzes();
             $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
-            //ChromePhp::log($resultsJson);
+//ChromePhp::log($resultsJson);
             echo $resultsJson;
         } catch (Exception $e) {
             sendErrorJson($e->getMessage());
@@ -66,56 +66,60 @@ function doGet() {
 }
 
 function doDelete() {
-    if (isset($_GET['quizID'])) { 
-        $id = $_GET['quizID']; 
-        // Only the ID of the item matters for a delete,
-        // but the accessor expects an object, 
-        // so we need a dummy object.
+    if (isset($_GET['quizID'])) {
+        $id = $_GET['quizID'];
+// Only the ID of the item matters for a delete,
+// but the accessor expects an object, 
+// so we need a dummy object.
         $quizItemObj = new Quiz($id, "Dummy", "Dummy", "Dummy");
 
-        // delete the object from DB
+// delete the object from DB
         $mia = new QuizAccessor();
         $success = $mia->deleteQuiz($quizItemObj);
         echo $success;
     } else {
-        // Bulk deletes not implemented.
+// Bulk deletes not implemented.
         ChromePhp::log("Sorry, bulk deletes not allowed!");
     }
 }
 
 // aka CREATE
 function doPost() {
-    if (isset($_GET['quizID'])) { 
-        // The details of the item to insert will be in the request body.
+    if (isset($_GET['quizID'])) {
+// The details of the item to insert will be in the request body.
         $body = file_get_contents('php://input');
         $contents = json_decode($body, true);
 
-        // create a Quiz object
+// create a Quiz object
         $quizItemObj = new Quiz($contents['quizID'], $contents['quizTitle'], $contents['questions'], $contents['points']);
-        // add the object to DB
+// add the object to DB
         $mia = new QuizAccessor();
         $success = $mia->addQuiz($quizItemObj);
         echo $success;
     } else {
-        // Bulk inserts not implemented.
+// Bulk inserts not implemented.
         ChromePhp::log("Sorry, bulk inserts not allowed!");
     }
 }
 
 // aka UPDATE
 function doPut() {
-    if (isset($_GET['quizID'])) { 
-        // The details of the item to update will be in the request body.
-        $body = file_get_contents('php://input');
-        $contents = json_decode($body, true);
+    if (isset($_GET['quizID'])) {
+        try {
+            // The details of the item to update will be in the request body.
+            $body = file_get_contents('php://input');
+            $contents = json_decode($body, true);
 
-        // create a Quiz object
-        $quizItemObj = new Quiz($contents['quizID'], $contents['quizTitle'], $contents['questions'], $contents['points']);
+            // create a Quiz object
+            $quizItemObj = new Quiz($contents['quizID'], $contents['quizTitle'], $contents['questions'], $contents['points']);
 
-        // update the object in the  DB
-        $mia = new QuizAccessor();
-        $success = $mia->updateQuiz($quizItemObj);
-        echo $success;
+            // update the object in the  DB
+            $mia = new QuizAccessor();
+            $success = $mia->updateQuiz($quizItemObj);
+            echo $success;
+        } catch (Exception $ex) {
+            echo $ex;
+        }
     } else {
         // Bulk updates not implemented.
         ChromePhp::log("Sorry, bulk updates not allowed!");
