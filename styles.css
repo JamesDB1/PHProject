@@ -222,6 +222,7 @@ x
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
+  margin-right: 4px;
 }
 
 /* Add a color to the active/current link */
@@ -313,4 +314,10 @@ x
 
 .hidden {
     display: none;
+}
+.bold{
+    font-weight: bold;
+}
+.right{
+    text-align: right;
 }

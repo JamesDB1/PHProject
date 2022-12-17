@@ -4,6 +4,7 @@ RewriteEngine on
 
 RewriteRule ^quizapp/users$ api/userService.php [NC]
 RewriteRule ^quizapp/quizResults$ api/quizResultService.php [NC]
+RewriteRule ^quizapp/quizResults/(QR-\d+)$ api/quizResultService.php?resultID=$1 [NC]
 RewriteRule ^quizapp/quizResults/user/(\w+)$ api/quizResultService.php?username=$1 [NC]
 RewriteRule ^quizapp/quizzes$ api/quizService.php [NC]
 RewriteRule ^quizapp/quizzes/(\w\w-\d+)$ api/quizService.php?quizID=$1 [NC]

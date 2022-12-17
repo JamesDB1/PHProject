@@ -26,7 +26,7 @@ function doLogin(e) {
             } else if (resp === "wrong password") {
                 document.querySelector("#passwordError").innerHTML = resp;
             } else if (resp === "login successful") {
-                window.location.href = "quizzes.php";
+                window.location.href = "quizResults.php";
             } else {
                 alert("BAD RESPONSE from server - investigate! (Response: '" + resp + "')");
             }

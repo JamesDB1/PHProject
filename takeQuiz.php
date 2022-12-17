@@ -51,9 +51,4 @@
         </div>
     </div>
 </body>
-<!-- DevButton code, thanks Steve -->
-<script>
-
-</script>
-
 </html>

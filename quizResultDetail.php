@@ -22,8 +22,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
                 <!-- Table added in JS -->
             </div>
             <div class="home_link">
-                <a href='quizzes.php'>Back to QR Search</a>
-                <a href="a6_index.html">Home</a>
+                <a href='quizResults.php'>Back to QR Search</a>
+                <a href="index.php">Home</a>
             </div>
         </div>
 

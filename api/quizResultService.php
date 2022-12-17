@@ -40,6 +40,18 @@ function doGet() {
         } catch (Exception $e) {
             echo "ERROR " . $e->getMessage();
         }
+    } else if (isset($_GET["resultID"])){
+                try {
+            $qra = new QuizResultAccessor();
+            $results = $qra->getResultsByQuery("select * from QuizResult where resultID = '" . $_GET['resultID'] . "'");
+            // should now create array of QuizResult objects
+
+            $resultsJson = json_encode($results, JSON_NUMERIC_CHECK);
+
+            echo $resultsJson;
+        } catch (Exception $e) {
+            echo "ERROR " . $e->getMessage();
+        }
     } else {
 
         try {
