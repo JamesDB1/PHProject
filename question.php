@@ -4,13 +4,14 @@
         <meta charset="UTF-8">
         <title>Quiz Search</title>
         <link rel="stylesheet" href="dbStyles.css">
+        <script src="scripts/menu.js"></script>
         <script src="scripts/question.js"></script>
     </head>
     <body>
         <h1>PHP Quiz App</h1>
 
         <h2>Search for Quizzes by Tags in the Questions</h2>
-
+        <div class="menuContainer"></div>
         <div class="containerMain">
             <br>
             <button id="AddButton">Add</button>
