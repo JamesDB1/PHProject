@@ -47,6 +47,7 @@ function buildResultTable(qr) {
     let tableLocation = document.querySelector("#displayQuizRecord");
     //open resultsArea div and table
     let tableHTML = `<h3>Quiz Title: ${result.quiz.quizTitle}</h3>`;
+    tableHTML += `<h4>User: ${result.user}</h4>`;
     tableHTML += "<div id = 'quizResultsArea'><table>";
     //build table header row
     tableHTML += "<thead><tr>";
