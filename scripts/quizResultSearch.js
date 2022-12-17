@@ -96,7 +96,7 @@ function buildResultsSection(url, element, title) {
                 html += "<td>" + temp.scoreNumerator + "/" + temp.scoreDenominator + "</td>";
                 let percent = temp.scoreNumerator / temp.scoreDenominator * 100;
                 html += "<td>" + percent.toFixed(1) + "%</td>";
-                html += `<td><button onclick='location.href = "quizResultDetail.php?id=${temp.resultID}"'>Details</button></td>`
+                html += `<td><button onclick='location.href = "quizResultDetail.php?id=${temp.resultID}"'>Details</button></td>`;
                 html += "</tr>";
             }
             html += "</table>";
