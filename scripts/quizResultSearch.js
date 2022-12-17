@@ -81,7 +81,8 @@ function buildResultsSection(url, element, title) {
             let data = JSON.parse(resp);
             let html = "<h4>" + title + "</h4>";
             html += "<table>";
-            html += "<tr><th>User</th><th>Quiz ID</th><th>Quiz Title</th><th>Started</th><th>Submitted</th><th>Score</th><th>Percent</th></tr>";
+            html += "<tr><th>User</th><th>Quiz ID</th><th>Quiz Title</th><th>Started</th>" +
+                    "<th>Submitted</th><th>Score</th><th>Percent</th><th>View</th></tr>";
             for (let i = 0; i < data.length; i++) {
                 let temp = data[i];
                 html += "<tr>";
@@ -95,6 +96,7 @@ function buildResultsSection(url, element, title) {
                 html += "<td>" + temp.scoreNumerator + "/" + temp.scoreDenominator + "</td>";
                 let percent = temp.scoreNumerator / temp.scoreDenominator * 100;
                 html += "<td>" + percent.toFixed(1) + "%</td>";
+                html += `<td><button onclick='location.href = "quizResultDetail.php?id=${temp.resultID}"'>Details</button></td>`
                 html += "</tr>";
             }
             html += "</table>";
